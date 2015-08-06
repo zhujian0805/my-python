@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/!svn/ver/39350/trunk/Config/Web/drone-backend/modules
+END
+functions.py
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/39127/trunk/Config/Web/drone-backend/modules/functions.py
+END
+variables.py
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/!svn/ver/37036/trunk/Config/Web/drone-backend/modules/variables.py
+END
+classes.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/39350/trunk/Config/Web/drone-backend/modules/classes.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/!svn/ver/26339/trunk/Config/Web/drone-backend/modules/__init__.py
+END
+parsers.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/!svn/ver/30570/trunk/Config/Web/drone-backend/modules/parsers.py
+END

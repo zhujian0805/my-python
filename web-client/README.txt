@@ -1,0 +1,14 @@
+This folder demostrate how to login a website, find the details below:
+
+#login website with basic authentication
+basic_auth.py
+
+#login Dropbox
+Dropbox-login-form.py
+
+#login website with urllib and cookies
+login-web.py
+
+#use the requests module for login website, super easy
+use-requests-login-sample1.py
+use-requests-login-sample2.py

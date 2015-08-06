@@ -1,0 +1,3 @@
+
+def fuck():
+    print "FUCK"
