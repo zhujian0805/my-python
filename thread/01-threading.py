@@ -34,7 +34,7 @@ for tid in range(10):
     thread = myThread(tid, task_queue)
     thread.start()
 
-# Since we started 10 thread, so we need 3 'STOP' to stop them
+# Since we started 10 thread, so we need 10 'STOP' to stop them
 for i in range(10):
     task_queue.put('STOP')
 
