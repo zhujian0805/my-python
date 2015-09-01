@@ -14,10 +14,10 @@ for line in fh.readlines():
   t.append(int(temp))
 fh.close()
 
-mins = dates.MinuteLocator(1)
+mins = dates.MinuteLocator()
 days = dates.DayLocator()
 hours = dates.HourLocator()
-dfmt = dates.DateFormatter('%b %d')
+dfmt = dates.DateFormatter('%Y-%m-%d %H:%M:%S')
 
 datemin = datetime(2015, 1, 4, 0, 0, 0)
 datemax = datetime(2015, 1, 4, 23, 59, 59)
