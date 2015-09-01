@@ -14,18 +14,19 @@ for line in fh.readlines():
   t.append(int(temp))
 fh.close()
 
+mins = dates.MinuteLocator(1)
 days = dates.DayLocator()
 hours = dates.HourLocator()
 dfmt = dates.DateFormatter('%b %d')
 
 datemin = datetime(2015, 1, 4, 0, 0, 0)
-datemax = datetime(2015, 1, 11, 23, 59, 59)
+datemax = datetime(2015, 1, 4, 23, 59, 59)
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.xaxis.set_major_locator(days)
+ax.xaxis.set_major_locator(mins)
 ax.xaxis.set_major_formatter(dfmt)
-ax.xaxis.set_minor_locator(hours)
+ax.xaxis.set_minor_locator(mins)
 ax.set_xlim(datemin, datemax)
 ax.set_ylabel('Temperature (F)')
 ax.grid(True)
