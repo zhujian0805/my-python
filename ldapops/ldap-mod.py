@@ -12,7 +12,7 @@ import ldap.modlist as modlist
 
 username = ''
 #ldapserver = 'ldapmaster.sample.net'
-ldapserver = 'ip addr'
+ldapserver = sys.argv[1]
 
 def conn_ldap():
     global ldapserver
