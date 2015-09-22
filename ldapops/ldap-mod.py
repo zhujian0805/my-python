@@ -28,14 +28,14 @@ def conn_ldap():
 def main():
     l = conn_ldap()
     #accounts = l.search_s('uid=*ntp*,ou=People,dc=sample,dc=net', ldap.SCOPE_SUBTREE)
-    accounts = l.search_s('ou=People,dc=sample,dc=net', ldap.SCOPE_SUBTREE, '(&(objectClass=account)(uid=ntp*))')
+    accounts = l.search_s('ou=People,dc=sample,dc=net', ldap.SCOPE_SUBTREE, '(&(objectClass=account)(uid=dbus))')
 
 #    pprint(accounts)
 
     i = 'fuckyou'
 
     modlist1 = []
-    item = ( ldap.MOD_REPLACE, 'loginShell', i )
+    item = ( ldap.MOD_REPLACE, 'uid', i )
     modlist1.append(item)
 
     for dn, attrs in accounts:
