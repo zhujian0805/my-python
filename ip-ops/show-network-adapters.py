@@ -12,7 +12,7 @@ ARCH_64_BIT = '64bit'
 
 def bytetoint(nic, sock):
     mac_string = fcntl.ioctl(sock.fileno(), 0x8927, struct.pack('256s', nic))[18:24]
-    return ':'.join([ ('%012x' % n)[-2:] for n in struct.unpack('6B', mac_string) ])
+    return ':'.join([ ('%x' % n) for n in struct.unpack('6B', mac_string) ])
 
 def _get_linux_network_adapters():
     """Get the list of Linux network adapters."""
