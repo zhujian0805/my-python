@@ -5,10 +5,10 @@ from fabric.api import sudo, env, execute, hide, cd
 import StringIO
 
 
-env.hosts = ['jameszhu@localhost:22', 'jameszhu@127.0.0.1:22']
-env.password = "VFR$bgt5nhy6"
+env.hosts = ['jzhu@localhost:22', 'jzhu@127.0.0.1:22']
+env.password = "123456"
 env.skip_bad_hosts = True
-#env.parallel = True
+env.parallel = True
 
 def hello(directory):
     """This is for a demostration of fabric"""
