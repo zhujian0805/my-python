@@ -3,6 +3,7 @@
 """ This is a simplest fabric script"""
 from fabric.api import sudo, env, execute, hide, cd
 import StringIO
+from pprint import pprint
 
 
 env.hosts = ['jzhu@localhost:22', 'jzhu@127.0.0.1:22']
@@ -26,4 +27,8 @@ def hello(directory):
 #execute(hello, "/dev")
 OUTPUT = execute(hello, "/tmp")
 
-print OUTPUT
+for host in OUTPUT:
+  print host
+  print '-----------------------'
+  for i in OUTPUT[host][0].split("\n"):
+    print i
