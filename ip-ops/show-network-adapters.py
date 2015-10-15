@@ -6,13 +6,10 @@ import array
 import struct
 from pprint import pprint
 import struct
+import check_hwaddr
 
 ARCH_32_BIT = '32bit'
 ARCH_64_BIT = '64bit'
-
-def bytetoint(nic, sock):
-    mac_string = fcntl.ioctl(sock.fileno(), 0x8927, struct.pack('256s', nic))[18:24]
-    return ':'.join([ ('%x' % n) for n in struct.unpack('6B', mac_string) ])
 
 def _get_linux_network_adapters():
     """Get the list of Linux network adapters."""
@@ -45,7 +42,7 @@ def _get_linux_network_adapters():
             sock.fileno(),
             0x891b,
             struct.pack('256s', adapter_name))[20:24])
-        mac_address = bytetoint(adapter_name, sock)
+        mac_address = check_hwaddr.getHwAddr(adapter_name)
         network_adapters.append({'name': adapter_name,
                                  'ip-address': ip_address,
                                  'mac-address': mac_address,
