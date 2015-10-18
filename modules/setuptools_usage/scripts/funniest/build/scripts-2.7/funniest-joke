@@ -1,0 +1,4 @@
+#!/usr/bin/python
+
+import funniest
+print funniest.joke()
