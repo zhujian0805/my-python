@@ -10,6 +10,7 @@ http://blog.databigbang.com/automated-browserless-oauth-authentication-for-twitt
 
 # QQ oauth login example
 http://www.open-open.com/lib/view/open1374328205933.html
+http://www.oschina.net/code/snippet_42346_11489
 
 [Scripts]
 1.  github-oauth-profile.py:
