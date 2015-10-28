@@ -3,7 +3,9 @@
 from requests_oauthlib import OAuth2Session
 from flask import Flask, request, redirect, session, url_for
 from flask.json import jsonify
+import json
 import os
+from pprint import pprint
 
 app = Flask(__name__)
 
@@ -14,7 +16,6 @@ client_id = "2607467f409a6ff2c25d"
 client_secret = "73f30950b9a89ccb665bf75e3a432d26c7da815d"
 authorization_base_url = 'https://github.com/login/oauth/authorize'
 token_url = 'https://github.com/login/oauth/access_token'
-session = {}
 
 
 @app.route("/")
@@ -63,11 +64,14 @@ def profile():
     """Fetching a protected resource using an OAuth 2 token.
     """
     github = OAuth2Session(client_id, token=session['oauth_token'])
-    return jsonify(github.get('https://api.github.com/user').json())
-    #return jsonify(github.get('https://api.github.com/search/users?q=zhujian0805').json())
-    #return jsonify(github.get('https://api.github.com/user/email').json())
-    #return jsonify(github.get('https://api.github.com//user/followers').json())
 
+    #res = github.get('https://api.github.com/user').json()
+    res = github.get('https://api.github.com/user/repos').json()
+    ret = {}
+    for r in res:
+      ret[r['name']] = r
+
+    return jsonify(ret)
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback
