@@ -8,6 +8,9 @@ https://requests-oauthlib.readthedocs.org/en/latest/
 https://gist.github.com/lebedov/8c3f33ebb55a67b732c1#file-linkedin_access_oauth2-py
 http://blog.databigbang.com/automated-browserless-oauth-authentication-for-twitter/
 
+# QQ oauth login example
+http://www.open-open.com/lib/view/open1374328205933.html
+
 [Scripts]
 1.  github-oauth-profile.py:
     It is a simplest Flask application with grab user information from github.com
