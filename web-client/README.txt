@@ -17,3 +17,8 @@ use-requests-login-sample2.py
 
 [Links]
 https://scanningpages.wordpress.com/2012/12/29/python-urllib2-cookies-and-openstreetmap/
+
+http://martinjc.com/2011/06/09/logging-in-to-websites-with-python/
+
+# Basic authentication
+http://www.voidspace.org.uk/python/articles/authentication.shtml
