@@ -12,13 +12,13 @@ import cgi, cgitb
 import paramiko.client
 from IPy import IP, IPSet
 
-def getIpRange(l, site, domain):
-    networks = l.search_s("ou=networks,dc=%s,dc=net" % domain, ldap.SCOPE_SUBTREE, "(network=%s)" % site)
+def getIpRange(l, network, domain):
+    networks = l.search_s("ou=networks,dc=%s,dc=net" % domain, ldap.SCOPE_SUBTREE, "(network=%s)" % network)
 
     ips = []
 
     for dn, attrs in networks:
-        if attrs['network'][0] == site and attrs.has_key('ip'):
+        if attrs['network'][0] == network and attrs.has_key('ip'):
             ips = IP(attrs['ip'][0])
 
     return ips
@@ -38,8 +38,8 @@ def getUsedIp(l, site, domain):
     return usedip
 
 
-def main(server, password, site, domain):
-    dn = "user=jameszhu,ou=users,dc=%s,dc=net" % domain
+def main(server, password, network, site, domain):
+    dn = "user=jzhu,ou=users,dc=%s,dc=net" % domain
     ldap.set_option(ldap.OPT_X_TLS_REQUIRE_CERT, ldap.OPT_X_TLS_NEVER)
     conn_str = "ldap://" + server
     l = ldap.initialize(conn_str)
@@ -51,7 +51,7 @@ def main(server, password, site, domain):
         print("ERROR: invalid ldap credentials for jameszhu" )
         sys.exit(1)
 
-    allips = getIpRange(l, site, domain)
+    allips = getIpRange(l, network, domain)
     usedips = getUsedIp(l, site, domain)
     freeips = []
 
@@ -61,4 +61,4 @@ def main(server, password, site, domain):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4])
+    main(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
