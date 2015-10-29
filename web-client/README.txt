@@ -1,3 +1,4 @@
+[Notes]
 This folder demostrate how to login a website, find the details below:
 
 #login website with basic authentication
@@ -12,3 +13,7 @@ login-web.py
 #use the requests module for login website, super easy
 use-requests-login-sample1.py
 use-requests-login-sample2.py
+
+
+[Links]
+https://scanningpages.wordpress.com/2012/12/29/python-urllib2-cookies-and-openstreetmap/
