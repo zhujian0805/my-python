@@ -7,5 +7,4 @@ from fabric.api import run, sudo, env, cd
 
 def taskA():
   with cd('/'):
-    with cd('etc'):
       run('ls -ltr')
