@@ -1,3 +1,4 @@
+[NOTES]
 # Python advanced features
 # Classes + Metaclasses,
 # Iterators, Generators, itertools
@@ -7,3 +8,6 @@ http://blog.jobbole.com/66097/
 http://blog.jobbole.com/67748/
 
 http://scipy-lectures.github.io/advanced/advanced_python/
+
+# Create function runtime
+http://snipplr.com/view/17819/
