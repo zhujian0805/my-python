@@ -1,72 +1,84 @@
 #!/usr/bin/python
 
-import urlparse
-import oauth2 as oauth
+from requests_oauthlib import OAuth2Session
+from flask import Flask, request, redirect, session, url_for
+from flask.json import jsonify
+import json
+import os
 from pprint import pprint
+from werkzeug.serving import make_ssl_devcert, run_simple
 
-consumer_key = "dt4g8rxtfmju92v29edwx82gnqeg9jyu"
-consumer_secret = "sSRWBQ6d6Xw3U2NDr9bSErDHKaVCgUCX"
-authorization_url = 'https://www.battlenet.com.cn/oauth/authorize'
-request_token_url = 'https://www.battlenet.com.cn/oauth/token'
+app = Flask(__name__)
 
 
-
-consumer = oauth.Consumer(consumer_key, consumer_secret)
-client = oauth.Client(consumer)
-
-# Step 1: Get a request token. This is a temporary token that is used for 
-# having the user authorize an access token and to sign the request to obtain 
-# said access token.
-
-resp, content = client.request(request_token_url, "GET")
-if resp['status'] != '200':
-    raise Exception("Invalid response %s." % resp['status'])
-
-request_token = dict(urlparse.parse_qsl(content))
-
-pprint(request_token)
-print "Request Token:"
-print "    - oauth_token        = %s" % request_token['oauth_token']
-print "    - oauth_token_secret = %s" % request_token['oauth_token_secret']
-print 
-
-# Step 2: Redirect to the provider. Since this is a CLI script we do not 
-# redirect. In a web application you would redirect the user to the URL
-# below.
-
-print "Go to the following link in your browser:"
-print "%s?oauth_token=%s" % (authorize_url, request_token['oauth_token'])
-print 
-
-# After the user has granted access to you, the consumer, the provider will
-# redirect you to whatever URL you have told them to redirect to. You can 
-# usually define this in the oauth_callback argument as well.
-accepted = 'n'
-while accepted.lower() == 'n':
-    accepted = raw_input('Have you authorized me? (y/n) ')
-oauth_verifier = raw_input('What is the PIN? ')
-
-# Step 3: Once the consumer has redirected the user back to the oauth_callback
-# URL you can request the access token the user has approved. You use the 
-# request token to sign this request. After this is done you throw away the
-# request token and use the access token returned. You should store this 
-# access token somewhere safe, like a database, for future use.
-token = oauth.Token(request_token['oauth_token'],
-    request_token['oauth_token_secret'])
-token.set_verifier(oauth_verifier)
-client = oauth.Client(consumer, token)
-
-resp, content = client.request(access_token_url, "POST")
-access_token = dict(urlparse.parse_qsl(content))
-
-pprint(access_token)
-print "Access Token:"
-print "    - oauth_token        = %s" % access_token['oauth_token']
-print "    - oauth_token_secret = %s" % access_token['oauth_token_secret']
-print
-print "You may now access protected resources using the access tokens above." 
-print
+# This information is obtained upon registration of a new GitHub OAuth
+# application here: https://github.com/settings/applications/new
+client_id = "dt4g8rxtfmju92v29edwx82gnqeg9jyu"
+client_secret = "sSRWBQ6d6Xw3U2NDr9bSErDHKaVCgUCX"
+authorization_base_url = 'https://www.battlenet.com.cn/oauth/authorize'
+token_url = 'https://www.battlenet.com.cn/oauth/token'
 
 
+@app.route("/")
+def demo():
+    """Step 1: User Authorization.
+
+    Redirect the user/resource owner to the OAuth provider (i.e. Github)
+    using an URL with a few key OAuth parameters.
+    """
+    github = OAuth2Session(client_id)
+    authorization_url, state = github.authorization_url(authorization_base_url)
+
+    # State is used to prevent CSRF, keep this for later.
+    session['oauth_state'] = state
+    print authorization_url
+    return redirect(authorization_url)
 
 
+# Step 2: User authorization, this happens on the provider.
+
+@app.route("/callback", methods=["GET"])
+def callback():
+    print '--------- callbacking ----------------'
+    """ Step 3: Retrieving an access token.
+
+    The user has been redirected back from the provider to your registered
+    callback URL. With this redirection comes an authorization code included
+    in the redirect URL. We will use that to obtain an access token.
+    """
+
+    github = OAuth2Session(client_id, state=session['oauth_state'])
+    token = github.fetch_token(token_url, client_secret=client_secret,
+                               authorization_response=request.url)
+
+    # At this point you can fetch protected resources but lets save
+    # the token and show how this is done from a persisted token
+    # in /profile.
+    print 'token is ---------' , token
+    session['oauth_token'] = token
+    return redirect('https://dev.battle.net/')
+
+
+@app.route("/profile", methods=["GET"])
+def profile():
+    print '---------------- profiling --------------'
+    """Fetching a protected resource using an OAuth 2 token.
+    """
+    github = OAuth2Session(client_id, token=session['oauth_token'])
+
+    #res = github.get('https://api.github.com/user').json()
+    res = github.get('https://api.github.com/user/repos').json()
+    ret = {}
+    for r in res:
+      ret[r['name']] = r
+
+    return jsonify(ret)
+
+if __name__ == "__main__":
+    # This allows us to use a plain HTTP callback
+    os.environ['DEBUG'] = "1"
+    make_ssl_devcert('/tmp', host='localhost')
+
+    app.secret_key = os.urandom(24)
+    #app.run(debug=True)
+    run_simple('localhost', 443, app, ssl_context=('/tmp/key.crt', '/tmp/key.key'))
