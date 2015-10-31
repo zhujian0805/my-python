@@ -1,4 +1,6 @@
 #!/usr/bin/python
+from pprint import pprint
+import json
 
 # Credentials you get from registering a new application
 client_id = '2607467f409a6ff2c25d'
@@ -24,4 +26,9 @@ github.fetch_token(token_url, client_secret=client_secret,
 
 # Fetch a protected resource, i.e. user profile
 r = github.get('https://api.github.com/user/repos')
-print r.content
+
+decoded = json.loads(json.loads(json.dumps(r.content)))
+
+e = decoded[0]
+for key in e:
+  print key, e[key]
