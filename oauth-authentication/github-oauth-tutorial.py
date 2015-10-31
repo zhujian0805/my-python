@@ -27,8 +27,7 @@ github.fetch_token(token_url, client_secret=client_secret,
 # Fetch a protected resource, i.e. user profile
 r = github.get('https://api.github.com/user/repos')
 
-decoded = json.loads(json.loads(json.dumps(r.content)))
+decoded = json.loads(r.content)
 
-e = decoded[0]
-for key in e:
-  print key, e[key]
+for i in decoded:
+  print i['name']
