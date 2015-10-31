@@ -29,5 +29,7 @@ r = github.get('https://api.github.com/user/repos')
 
 decoded = json.loads(r.content)
 
-for i in decoded:
-  print i['name']
+print json.dumps(decoded, sort_keys=True, indent=4)
+
+#for i in decoded:
+#  print i['name']
