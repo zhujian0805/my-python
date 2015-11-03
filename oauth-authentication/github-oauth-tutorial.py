@@ -3,8 +3,8 @@ from pprint import pprint
 import json
 
 # Credentials you get from registering a new application
-client_id = '2607467f409a6ff2c25d'
-client_secret = '73f30950b9a89ccb665bf75e3a432d26c7da815d'
+client_id = '2607467f409a6f2c25d'
+client_secret = '73f30950b9a89ccb6a432d26c7da815d'
 
 # OAuth endpoints given in the GitHub API documentation
 authorization_base_url = 'https://github.com/login/oauth/authorize'

@@ -4,8 +4,8 @@ import urlparse
 import oauth2 as oauth
 from pprint import pprint
 
-consumer_key = 'h519vko96gvonqk'
-consumer_secret = 'vf8jy7fukq6vnz6'
+consumer_key = 'h96gvonqk'
+consumer_secret = 'vfukq6vnz6'
 
 request_token_url = 'https://api.dropbox.com/1/oauth/request_token'
 access_token_url = 'https://api.dropbox.com/1/oauth/access_token'

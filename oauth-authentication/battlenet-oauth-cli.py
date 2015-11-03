@@ -3,8 +3,8 @@ from pprint import pprint
 import json
 from requests_oauthlib import OAuth2Session
 
-client_id = 'usas96gfgx4b29p82rgxxc5sq5d7utng'
-client_secret = 'Aa7xzrPF3wjmCjaza8ezvJwgAuz6PJca'
+client_id = 'usas96gfgx4b2rgxxc5sq5d7utng'
+client_secret = 'Aa7xzrPFslfjwjmCjaza8ezvJwgAuz6PJca'
 authorization_base_url = 'https://www.battlenet.com.cn/oauth/authorize'
 token_url = 'https://www.battlenet.com.cn/oauth/token'
 

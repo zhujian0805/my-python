@@ -13,8 +13,8 @@ app = Flask(__name__)
 
 # This information is obtained upon registration of a new GitHub OAuth
 # application here: https://github.com/settings/applications/new
-client_id = "dt4g8rxtfmju92v29edwx82gnqeg9jyu"
-client_secret = "sSRWBQ6d6Xw3U2NDr9bSErDHKaVCgUCX"
+client_id = "dt4"
+client_secret = "sS"
 authorization_base_url = 'https://www.battlenet.com.cn/oauth/authorize'
 token_url = 'https://www.battlenet.com.cn/oauth/token'
 
