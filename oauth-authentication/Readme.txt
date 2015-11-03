@@ -4,6 +4,9 @@ the flask.jsonify can only take dict as argument
 [Links]
 https://requests-oauthlib.readthedocs.org/en/latest/
 
+# Good API management and testing platform
+https://accounts.apigee.com/accounts/dashboard#/
+
 # Example of login oauth withour a brower interaction
 https://gist.github.com/lebedov/8c3f33ebb55a67b732c1#file-linkedin_access_oauth2-py
 http://blog.databigbang.com/automated-browserless-oauth-authentication-for-twitter/
