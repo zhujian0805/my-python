@@ -1,4 +1,7 @@
 #!/usr/bin/python
+
+# ****** Note: This seems doesn't work for CN but works for US
+
 from pprint import pprint
 import json
 from requests_oauthlib import OAuth2Session
