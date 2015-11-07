@@ -55,4 +55,5 @@ class EchoServer(asyncore.dispatcher):
             handler = EchoHandler(sock)
 
 server = EchoServer('0.0.0.0', 8080)
+server.debug = True
 asyncore.loop()
