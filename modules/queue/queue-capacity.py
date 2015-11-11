@@ -25,12 +25,12 @@ while i <= 100000:
 print myq.qsize()
 
 j = 1
-#while j<100:
-while True:
+while j<100:
+#while True:
   try:
     item = myq.get(block=False)
     print item
-    #j = j + 1
+    j = j + 1
   except Empty:
     print "The Queue is empty!!!"
     break
