@@ -8,3 +8,6 @@ string = '\u738b\u5e9c\u4e95\u5e97\u53cc\u4eba\u5957\u9910\uff01\u8282\u5047\u65
 # To make unicode out of this, use decode('unicode-escape')
 
 print string.decode('unicode-escape').encode('utf8')
+
+# Or this is the same:
+print string.decode('unicode-escape')
