@@ -14,4 +14,4 @@ http://www.programcreek.com/python/index/module/list
 
 
 [NOTEs]
-1. Use 'yapf' to format your python code, which is a tool like Perl's 'perltidy'
+1. Use 'yapf' or 'autopep8' to format your python code, which is a tool like Perl's 'perltidy'
