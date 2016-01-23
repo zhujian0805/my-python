@@ -12,8 +12,10 @@ import cgi, cgitb
 import paramiko.client
 from IPy import IP, IPSet
 
+
 def getIpRange(l, network, domain):
-    networks = l.search_s("ou=networks,dc=%s,dc=net" % domain, ldap.SCOPE_SUBTREE, "(network=%s)" % network)
+    networks = l.search_s("ou=networks,dc=%s,dc=net" % domain,
+                          ldap.SCOPE_SUBTREE, "(network=%s)" % network)
 
     ips = []
 
@@ -23,11 +25,13 @@ def getIpRange(l, network, domain):
 
     return ips
 
+
 def getUsedIp(l, site, domain):
     usedip = []
     thesite = site.split('-')[0]
 
-    locations = l.search_s("ou=locations,dc=%s,dc=net" % domain, ldap.SCOPE_SUBTREE, "(location=%s-*)" % thesite)
+    locations = l.search_s("ou=locations,dc=%s,dc=net" % domain,
+                           ldap.SCOPE_SUBTREE, "(location=%s-*)" % thesite)
 
     for dn, attr in locations:
         if attr.has_key('interface'):
@@ -44,11 +48,11 @@ def main(server, password, network, site, domain):
     conn_str = "ldap://" + server
     l = ldap.initialize(conn_str)
     l.start_tls_s()
-	
+
     try:
         l.simple_bind_s(dn, password)
     except ldap.INVALID_CREDENTIALS:
-        print("ERROR: invalid ldap credentials for jameszhu" )
+        print("ERROR: invalid ldap credentials for jameszhu")
         sys.exit(1)
 
     allips = getIpRange(l, network, domain)

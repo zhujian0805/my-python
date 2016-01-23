@@ -45,6 +45,7 @@ SVN_NOTIFICATIONS = {
     pysvn.wc_notify_action.annotate_revision: 'A',
 }
 
+
 class BuildManager(object):
     def __init__(self, name, btype, specified_region, path, logger):
         super(BuildManager, self).__init__()
@@ -58,10 +59,10 @@ class BuildManager(object):
 
     def _parse_build_flags(self, bflags):
         del self.binfo
-        self.binfo = { }
+        self.binfo = {}
         tmp_flags = bflags.strip().split(",")
         for flag in tmp_flags:
-            name,value = flag.strip().split("=")
+            name, value = flag.strip().split("=")
             if name == "target" and value is not None:
                 self.binfo["target"] = value
             elif name == "target" and value is None:
@@ -103,16 +104,21 @@ class BuildManager(object):
         # change to path
         os.chdir(self.cur_path)
         if isold:
-            functions.export_var("TARGET_DIR", "%s%s-%s" % (self.cur_path.rstrip("/"), Config.get("target", self.region), self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME, self.region))
+            functions.export_var("TARGET_DIR", "%s%s-%s" %
+                                 (self.cur_path.rstrip("/"), Config.get(
+                                     "target", self.region), self.region))
+        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
+                                                             self.region))
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat", self.region))
+        functions.export_var("CATALINA_HOME", Config.get("tomcat",
+                                                         self.region))
         if "build.type" in self.binfo:
             result = functions.exec_oe(
-                self._CMD_CLEAN % (self._CMD_NAME, "-Dbuild.type=%s" % self.binfo["build.type"]))
+                self._CMD_CLEAN %
+                (self._CMD_NAME, "-Dbuild.type=%s" % self.binfo["build.type"]))
         else:
             result = functions.exec_oe(self._CMD_CLEAN % (self._CMD_NAME, ""))
         if isjava6:
@@ -138,9 +144,12 @@ class BuildManager(object):
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat", self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME, self.region))
-        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr, Config.get(self._CMD_TARGET_NAME, self.region))
+        functions.export_var("CATALINA_HOME", Config.get("tomcat",
+                                                         self.region))
+        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
+                                                             self.region))
+        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr, Config.get(
+            self._CMD_TARGET_NAME, self.region))
         result = functions.exec_oe(self.buildcmd)
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
@@ -151,9 +160,11 @@ class BuildManager(object):
         os.chdir(self.orig_path)
         return (result[0], (result[1], result[2]))
 
+
 class BuildManagerOld(BuildManager):
     def __init__(self, name, btype, specified_region, path, logger):
-        super(BuildManagerOld, self).__init__(name, btype, specified_region, path, logger)
+        super(BuildManagerOld, self).__init__(name, btype, specified_region,
+                                              path, logger)
 
     def build_old(self, bflags, isjava6):
         result = self._build_skel(bflags)
@@ -163,14 +174,19 @@ class BuildManagerOld(BuildManager):
 
         flagstr = self._build_flags_str()
         os.chdir(self.cur_path)
-        functions.export_var("TARGET_DIR", "%s%s-%s" % (self.cur_path.rstrip("/"), Config.get("target", self.region), self.region))
+        functions.export_var("TARGET_DIR", "%s%s-%s" %
+                             (self.cur_path.rstrip("/"), Config.get(
+                                 "target", self.region), self.region))
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat", self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME, self.region))
-        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr, self.binfo["target"])
+        functions.export_var("CATALINA_HOME", Config.get("tomcat",
+                                                         self.region))
+        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
+                                                             self.region))
+        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr,
+                                           self.binfo["target"])
         result = functions.exec_oe(self.buildcmd)
         functions.export_var("TARGET_DIR", "")
         if isjava6:
@@ -182,6 +198,7 @@ class BuildManagerOld(BuildManager):
         os.chdir(self.orig_path)
         return (result[0], (result[1], result[2]))
 
+
 class Maven(BuildManager):
     _CMD_HOME_NAME = "MAVEN_HOME"
     _CMD_NAME = "mvn"
@@ -190,7 +207,9 @@ class Maven(BuildManager):
     _CMD_TARGET_NAME = "mvn_def_target"
 
     def __init__(self, name, btype, specified_region, path, logger):
-        super(Maven, self).__init__(name, btype, specified_region, path, logger)
+        super(Maven, self).__init__(name, btype, specified_region, path,
+                                    logger)
+
 
 class Ant(BuildManagerOld):
     _CMD_HOME_NAME = "ANT_HOME"
@@ -201,6 +220,7 @@ class Ant(BuildManagerOld):
 
     def __init__(self, name, btype, specified_region, path, logger):
         super(Ant, self).__init__(name, btype, specified_region, path, logger)
+
 
 class Svn(object):
     """Easier interface for pysvn.
@@ -257,9 +277,7 @@ class Svn(object):
 
         # If we are here... the app is checked out and we only want to update
         if rev:
-            revision = pysvn.Revision(
-                pysvn.opt_revision_kind.number,
-                rev)
+            revision = pysvn.Revision(pysvn.opt_revision_kind.number, rev)
 
         # if update fails, it probably needs a cleanup
         # if it fails during the cleanup or the update
@@ -297,7 +315,8 @@ class Svn(object):
     def _log(self, dct):
         if dct['action'] == pysvn.wc_notify_action.update_completed:
             self.revision_update_complete = dct['revision']
-        elif dct['path'] != '' and SVN_NOTIFICATIONS[dct['action']] is not None:
+        elif dct['path'] != '' and SVN_NOTIFICATIONS[dct[
+                'action']] is not None:
             msg = '%s %s' % (SVN_NOTIFICATIONS[dct['action']], dct['path'])
             self.messages.append(msg)
 
@@ -315,6 +334,7 @@ class Svn(object):
         locale.setlocale(locale.LC_ALL, "en_US.UTF-8")
         self.client.cleanup(self.path)
         locale.setlocale(locale.LC_ALL, "%s.%s" % (lcode, enc))
+
 
 class Application(object):
     def __init__(self, dct, logger, read_only=False):
@@ -343,22 +363,22 @@ class Application(object):
         if "path" in dct:
             self.path = dct["path"]
             if not self.read_only:
-                self.svn = Svn(functions.get_real_svn_location(self.path),
-                               Config.get("svn", self.region) + functions.escape_os_path(self.path),
-                               self.logger)
+                self.svn = Svn(
+                    functions.get_real_svn_location(self.path),
+                    Config.get("svn", self.region) +
+                    functions.escape_os_path(self.path), self.logger)
             if self.btype:
-                if self.flags.get("dynamic", "yes") == "yes" and not self.read_only:
+                if self.flags.get("dynamic",
+                                  "yes") == "yes" and not self.read_only:
                     if self.flags.get("maven", "no") == "yes":
-                        self.ant = Maven(self.name,
-                                       self.btype,
-                                       self.region,
-                                       Config.get("svn", self.region) + functions.escape_os_path(self.path),
-                                       self.logger)
+                        self.ant = Maven(self.name, self.btype, self.region,
+                                         Config.get("svn", self.region) +
+                                         functions.escape_os_path(self.path),
+                                         self.logger)
                     else:
-                        self.ant = Ant(self.name,
-                                       self.btype,
-                                       self.region,
-                                       Config.get("svn", self.region) + functions.escape_os_path(self.path),
+                        self.ant = Ant(self.name, self.btype, self.region,
+                                       Config.get("svn", self.region) +
+                                       functions.escape_os_path(self.path),
                                        self.logger)
 
         if "fs" in dct:
@@ -378,9 +398,11 @@ class Application(object):
                 if self.ant:
                     del self.ant
                 self._load_config(copy.deepcopy(app))
-                return (SUCCESS, "Application %s reloaded successfully." % self.name)
+                return (SUCCESS, "Application %s reloaded successfully." %
+                        self.name)
         return (ERROR, """I could not load this application anymore: %s.\n
-                If you changed an application name you do need to _restart_ the build server.""" % self.name)
+                If you changed an application name you do need to _restart_ the build server."""
+                % self.name)
 
     def _convert_to_new_flag_format(self, flags):
         """This takes old style flags and puts them as new style flags."""
@@ -418,7 +440,7 @@ class Application(object):
         """
 
         for flag in flags.strip().split(","):
-            name,value = flag.strip().split("=")
+            name, value = flag.strip().split("=")
             self.flags[name.strip()] = value.strip()
 
     def __str__(self):
@@ -430,7 +452,8 @@ class Application(object):
         if self.btype:
             str_ += ",projectBuild=%s" % self.btype
 
-        tmp_s = ','.join(["%s=%s" % (name, value) for (name,value) in self.flags.items()])
+        tmp_s = ','.join(["%s=%s" % (name, value)
+                          for (name, value) in self.flags.items()])
         if tmp_s != '':
             str_ += ",projectFlags=[%s]" % (tmp_s)
 

@@ -2,6 +2,7 @@ import os
 import shlex
 import subprocess
 
+
 def escape_os_path(path):
     tmp = r""
     for s in path:
@@ -11,10 +12,15 @@ def escape_os_path(path):
             tmp += s
     return tmp
 
+
 def exec_oe(cmd):
-    process = subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    process = subprocess.Popen(
+        shlex.split(cmd),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE)
     out, err = process.communicate()
     return (process.returncode, out, err)
+
 
 def get_real_svn_location(path):
     if path.startswith("/svn-us"):
@@ -31,6 +37,7 @@ def get_real_svn_location(path):
         # fallback to the us one
         return "http://web-repository/%s" % path[8:]
     return None
+
 
 def export_var(name, value):
     os.environ[name] = value

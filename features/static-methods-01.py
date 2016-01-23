@@ -11,11 +11,9 @@ class Smoothie(object):
 
     @staticmethod
     def eternal_sunshine():
-        return Smoothie.blend(
-            Smoothie.YOGURT, Smoothie.STRAWBERRY,
-            Smoothie.BANANA)
+        return Smoothie.blend(Smoothie.YOGURT, Smoothie.STRAWBERRY,
+                              Smoothie.BANANA)
 
     @staticmethod
     def mango_lassi():
-        return Smoothie.blend(
-            Smoothie.YOGURT, Smoothie.MANGO)
+        return Smoothie.blend(Smoothie.YOGURT, Smoothie.MANGO)

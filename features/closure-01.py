@@ -7,9 +7,11 @@
 
 def outer(o):
     """Outer function"""
+
     def inner(i):
         """Inner function"""
         print "%s, %s" % (o, i)
+
     return inner
 
 

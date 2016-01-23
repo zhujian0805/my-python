@@ -13,13 +13,15 @@ try:
 except:
     import cElementTree as ET
 
+
 class AppsXML:
     """
     Parser for apps.xml
     """
+
     def __init__(self):
-        self._tree = ET.parse(os.path.join(Config.get("config"), 
-                                           Config.get("apps_xml")))
+        self._tree = ET.parse(os.path.join(
+            Config.get("config"), Config.get("apps_xml")))
         self.root = self._tree.getroot()
         self.changed_region = None
         if self.root.tag != "apps":
@@ -70,15 +72,15 @@ class AppsXML:
             found = True
 
         return found
-    
+
     def get_apps(self, specified_region, names=[]):
         apps_lst = []
-        
+
         found_region = self._set_region(specified_region)
 
         if not found_region:
             return apps_lst
-        
+
         for app in self.root:
             if names:
                 for name in names:
@@ -97,7 +99,7 @@ class AppsXML:
         found_region = self._set_region(specified_region)
         if not found_region:
             return apps_lst
-        
+
         for app in self.root:
             if app.get("name") == name:
                 return self._get_app_info(app)
@@ -106,25 +108,25 @@ class AppsXML:
     def pprint(self):
         return ET.tostring(self.root)
 
-        
+
 class BuildXML:
     """
     Parser for build.xml
     """
 
     def __init__(self):
-        self._tree = ET.parse(os.path.join(Config.get("config"), 
-                                           Config.get("build_xml")))
+        self._tree = ET.parse(os.path.join(
+            Config.get("config"), Config.get("build_xml")))
         self.root = self._tree.getroot()
         self.changed_region = None
-        
+
         if self.root.tag != "builds":
             raise InvalidRoot(self.root.tag)
 
         #self.builds = self.tree["nodes"]
 
     def _get_build_info(self, build):
-        flags_strs = { "target" : build.get("target") }
+        flags_strs = {"target": build.get("target")}
 
         for flag in build[0]:
             flags_strs[flag.get("name")] = flag.get("value")
@@ -134,7 +136,7 @@ class BuildXML:
     def _set_region(self, specified_region):
         # Point to the correct region
         found = False
-        
+
         if self.changed_region != specified_region:
             # reset to the top of the tree
             self.root = self._tree.getroot()
@@ -157,13 +159,13 @@ class BuildXML:
             found = True
 
         return found
-    
+
     def get_build_info(self, type, specified_region):
         found_region = self._set_region(specified_region)
 
         if not found_region:
             return None
-        
+
         for build in self.root:
             if build.get("type") == type:
                 return self._get_build_info(build)

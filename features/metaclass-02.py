@@ -1,10 +1,13 @@
 #!/usr/bin/python
 
+
 def mymetaclass(name, parents, attributes):
-  return "Hello"
+    return "Hello"
+
 
 class C(object):
-  __metaclass__ = mymetaclass
+    __metaclass__ = mymetaclass
+
 
 print C
 

@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
+
 def receiver():
-  print "Ready to receive"
-  while True:
-    n = (yield)
-    print "Got %s" % n
+    print "Ready to receive"
+    while True:
+        n = (yield)
+        print "Got %s" % n
 
 
 r = receiver()

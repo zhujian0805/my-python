@@ -1,5 +1,4 @@
 class MyClass(object):
-
     def some_instance_method(self, *args, **kwds):
         pass
 

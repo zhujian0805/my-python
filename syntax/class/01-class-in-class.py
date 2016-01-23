@@ -1,9 +1,10 @@
 #!/usr/bin/python
 from pprint import pprint
 
+
 class Test:
     class TestInTest:
-        def __init__(self,v1, v2):
+        def __init__(self, v1, v2):
             self.v1 = v1
             self.v2 = v2
 
@@ -17,7 +18,7 @@ class Test:
 
 test1 = Test()
 
-tInT = test1.TestInTest(1,2)
+tInT = test1.TestInTest(1, 2)
 
 tInT.showvar()
 

@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-x = [10, 8, -1, 100, 200, 200 , 200, 35]
+x = [10, 8, -1, 100, 200, 200, 200, 35]
 
 max = 0
 
@@ -23,9 +23,8 @@ getMaxInt(x)
 
 print("Max: %d" % max)
 
-
 print x
 
-x.sort(getRangeOfNum, reverse = True)
+x.sort(getRangeOfNum, reverse=True)
 
 print x

@@ -7,7 +7,7 @@ from cookielib import CookieJar
 
 cj = CookieJar()
 
-url = 'http://passport.renren.com/PLogin.do';
+url = 'http://passport.renren.com/PLogin.do'
 opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
 
 values = {'email': 'zhujian0805@gmail.com', 'password': 'zhujian***'}

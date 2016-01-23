@@ -5,11 +5,10 @@ import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-
 s = requests.Session()
 
 payload = {'email': 'zhujian0805@gmail.com', 'password': 'zhujian'}
-url = 'http://passport.renren.com/PLogin.do';
+url = 'http://passport.renren.com/PLogin.do'
 
 s.post(url, payload)
 
