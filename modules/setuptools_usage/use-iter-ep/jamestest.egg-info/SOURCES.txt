@@ -1,7 +1,0 @@
-README
-setup.py
-jamestest.egg-info/PKG-INFO
-jamestest.egg-info/SOURCES.txt
-jamestest.egg-info/dependency_links.txt
-jamestest.egg-info/entry_points.txt
-jamestest.egg-info/top_level.txt
