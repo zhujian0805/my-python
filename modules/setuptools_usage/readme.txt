@@ -6,4 +6,7 @@ http://python-packaging.readthedocs.org/en/latest/command-line-scripts.html
 
 
 [Notes]
-This is a demo for creating package using setuptools
+#This is a demo for creating package using setuptools
+
+# This is for dynamically load modules
+http://mathslinux.org/?p=468
