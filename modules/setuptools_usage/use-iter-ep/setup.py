@@ -3,7 +3,7 @@ from setuptools import setup
  
 setup(
     # Other keywords
-    name = "james test",
+    name = "jamestest",
     url = "https://james-test.com",
     author_email = "jzhu@gmail.com",
     entry_points={

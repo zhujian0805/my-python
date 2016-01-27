@@ -1,5 +1,0 @@
-[fooo]
-add = add:make
-update = update:make
-remove = remove:make
-
