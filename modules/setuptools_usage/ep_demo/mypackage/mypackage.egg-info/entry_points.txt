@@ -1,0 +1,3 @@
+[mypackage.api.v1]
+main = mypackage:main
+
