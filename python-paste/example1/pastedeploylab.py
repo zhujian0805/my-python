@@ -8,6 +8,8 @@ from webob import Request
 from webob import Response  
 from paste.deploy import loadapp  
 from wsgiref.simple_server import make_server  
+from pprint import pprint
+
 #Filter  
 class LogFilter():  
     def __init__(self,app):  
@@ -15,6 +17,7 @@ class LogFilter():
         pass  
     def __call__(self,environ,start_response):  
         print "filter:LogFilter is called."  
+        pprint(environ)
         return self.app(environ,start_response)  
     @classmethod  
     def factory(cls, global_conf, **kwargs):  
@@ -35,6 +38,7 @@ class Calculator():
         pass  
       
     def __call__(self,environ,start_response):  
+        pprint(environ)
         req = Request(environ)  
         res = Response()  
         res.status = "200 OK"  
