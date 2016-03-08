@@ -10,7 +10,9 @@ job: Developer
 skill: Elite
 employed: True
 foods:
-    - Apple
+    - Apple:
+        Red:
+          1000
     - Orange
     - Strawberry
     - Mango
@@ -18,6 +20,11 @@ languages:
     ruby: Elite
     python: Elite
     dotnet: Lame
+company:
+    - HP:
+        - China:
+        - Japan
+    - IBM
                 """)
 
 print yyy
