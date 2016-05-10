@@ -7,3 +7,8 @@ class Add(object):
 
     def __call__(self, a, b):
         print a + b
+
+
+a = Add()
+
+a(1, 100)
