@@ -28,6 +28,10 @@ conf.register_opt(rabbit_host_opt, group=rabbit_group)
 
 print conf.testing.host
 
+
+
+vxlan_group = cfg.OptGroup(name='vxlan',
+                            title='vxlan')
 vxlan_opts = [
     cfg.BoolOpt('enable_vxlan', default=True,
                 help=("Enable VXLAN on the agent. Can be enabled when "
@@ -50,6 +54,7 @@ vxlan_opts = [
                        "VXLAN forwarding table.")),
 ]
 
-cfg.CONF.register_opts(vxlan_opts, "VXLAN")
+conf.register_group(vxlan_group)
+conf.register_opts(vxlan_opts, group=vxlan_group)
 
-print cfg.CONF.VXLAN.ttl
+print conf.vxlan.ttl
