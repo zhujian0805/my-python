@@ -9,8 +9,10 @@ print timeStamp
 
 dateArray = datetime.datetime.utcfromtimestamp(timeStamp)
 
+print "dateArray"
 print dateArray
 
 otherStyleTime = dateArray.strftime("%d-%m-%Y %H:%M:%S")
 
+print "otherStyleTime"
 print otherStyleTime
