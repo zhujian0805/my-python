@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#!/usr/bin/env python
 
 import smtplib
 
@@ -7,24 +7,24 @@ from email.mime.text import MIMEText
 
 # me == my email address
 # you == recipient's email address
-me = "my@email.com"
-you = "your@email.com"
+me = "jzhu@blizzard.com"
+you = "jzhu@blizzard.com"
 
 # Create message container - the correct MIME type is multipart/alternative.
 msg = MIMEMultipart('alternative')
 msg['Subject'] = "Link"
-msg['From'] = 'James Zhu'
-msg['To'] = 'jzhu@jzhu.com'
+msg['From'] = me
+msg['To'] = you
 
 # Create the body of the message (a plain-text and an HTML version).
-text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttp://www.python.org"
+text = "Hi!\nHow are you?\nHere is the link you wanted:\nhttps://www.python.org"
 html = """\
 <html>
   <head></head>
   <body>
     <p>Hi!<br>
        How are you?<br>
-       Here is the <a href="http://www.python.org">link</a> you wanted.
+       Here is the <a href="https://www.python.org">link</a> you wanted.
     </p>
   </body>
 </html>
