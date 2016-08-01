@@ -2,11 +2,12 @@ from kafka import KafkaConsumer
 import avro.schema
 import avro.io
 import io
+import sys
  
 # To consume messages
-consumer = KafkaConsumer('my-topic',
-                         group_id='my_group',
-                         bootstrap_servers=['localhost:9092'])
+consumer = KafkaConsumer('%s' % sys.argv[1],
+                         group_id='%s' % sys.argv[2],
+                         bootstrap_servers=['%s:9092' % sys.argv[3]])
  
 schema_path="user.avsc"
 schema = avro.schema.parse(open(schema_path).read())
