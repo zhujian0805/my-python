@@ -2,13 +2,14 @@ from kafka import SimpleProducer, KafkaClient
 import avro.schema
 import io, random
 from avro.io import DatumWriter
+import sys
  
 # To send messages synchronously
-kafka = KafkaClient('localhost:9092')
+kafka = KafkaClient('%s:9092' % sys.argv[1])
 producer = SimpleProducer(kafka)
  
 # Kafka topic
-topic = "my-topic"
+topic = "%s" % sys.argv[2]
  
 # Path to user.avsc avro schema
 schema_path="user.avsc"
