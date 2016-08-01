@@ -15,6 +15,9 @@ topic = "%s" % sys.argv[2]
 schema_path="user.avsc"
 schema = avro.schema.parse(open(schema_path).read())
  
+
+print "sending to host: %s" % sys.argv[1]
+print "sending to topic: %s" % topic
  
 for i in xrange(10000):
     writer = avro.io.DatumWriter(schema)
