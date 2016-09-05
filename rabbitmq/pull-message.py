@@ -27,6 +27,7 @@ print(' [*] Waiting for logs. To exit press CTRL+C')
 def callback(ch, method, properties, body):
     print(" [x] %r:%r" % (method.routing_key, body))
 
+channel.basic_qos(prefetch_count=5000)
 channel.basic_consume(callback,
                       queue=queue_name,
                       no_ack=True)
