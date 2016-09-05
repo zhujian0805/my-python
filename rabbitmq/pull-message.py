@@ -25,9 +25,10 @@ for binding_key in binding_keys:
 print(' [*] Waiting for logs. To exit press CTRL+C')
 
 def callback(ch, method, properties, body):
-    print(" [x] %r:%r" % (method.routing_key, body))
+    #print(" [x] %r:%r" % (method.routing_key, body))
+    pass
 
-channel.basic_qos(prefetch_count=1000)
+channel.basic_qos(prefetch_count=50)
 channel.basic_consume(callback,
                       queue=queue_name,
                       no_ack=True)
