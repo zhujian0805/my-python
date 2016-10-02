@@ -6,7 +6,7 @@ import paramiko, socket
 
 
 env.hosts = ['localhost', '128.0.0.1']
-env.user = "jameszhu"
+env.user = "jzhu"
 env.port = 22
 env.password = "VFR$bgt5nhy6"
 env.skip_bad_hosts = True
