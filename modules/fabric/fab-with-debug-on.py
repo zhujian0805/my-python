@@ -6,4 +6,4 @@ from fabric.api import run, sudo, env, cd, show
 def hello():
     """Hello function"""
     with show('debug'):
-        run('ls "/home/jzhu"')
+        run('find /tmp/ -ls')
