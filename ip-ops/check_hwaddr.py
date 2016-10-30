@@ -2,6 +2,7 @@
 import socket
 import fcntl
 import struct
+import sys
 
 
 def getHwAddr(ifname):
@@ -11,4 +12,4 @@ def getHwAddr(ifname):
 
 
 if __name__ == '__main__':
-    print getHwAddr('eth0')
+    print getHwAddr(sys.argv[1])
