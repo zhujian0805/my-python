@@ -1,4 +1,4 @@
-#
+# http://johnallen.us/?p=236
 # nettest.py
 #
 import sys
