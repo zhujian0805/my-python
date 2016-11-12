@@ -3,3 +3,6 @@ http://kissg.me/2016/05/01/python-socket-programming-and-packet-sniffer/?utm_sou
 
 # Python build a udp scanner
 http://bt3gl.github.io/black-hat-python-building-a-udp-scanner.html
+
+# Python packet sniffer
+http://www.binarytides.com/python-packet-sniffer-code-linux/
