@@ -6,3 +6,6 @@ http://bt3gl.github.io/black-hat-python-building-a-udp-scanner.html
 
 # Python packet sniffer
 http://www.binarytides.com/python-packet-sniffer-code-linux/
+
+# Read pcap for DNS packet
+http://www.cnblogs.com/yulele/p/3721305.html
