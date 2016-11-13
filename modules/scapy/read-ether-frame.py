@@ -67,14 +67,12 @@ class IPSniff:
 
 #Example code to use IPSniff
 def test_incoming_callback(src, dst, frame):
-	pass
-    #print("incoming - src=%s, dst=%s, frame len = %d" 
-    #    %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
+    print("incoming - src=%s, dst=%s, frame len = %d" %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
+    pass
 
 def test_outgoing_callback(src, dst, frame):
-	pass
-    #print("outgoing - src=%s, dst=%s, frame len = %d" 
-    #    %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))    
+    print("outgoing - src=%s, dst=%s, frame len = %d" %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
+    pass
 
 ip_sniff = IPSniff('enp1s0', test_incoming_callback, test_outgoing_callback)
 ip_sniff.recv()
