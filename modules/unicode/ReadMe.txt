@@ -24,3 +24,7 @@ Python代码  收藏代码
 
 # Check out this example
 setdefaultencodeing-01.py
+
+
+# Python中的str与unicode处理方法
+http://python.jobbole.com/81244/
