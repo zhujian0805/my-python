@@ -1,6 +1,6 @@
 class JiraConnection(object):
   def __init__(self,):
-    self.server   = "https://jira.battle.net"
+    self.server   = "https://jira.domain.net"
     self._auth     = {"username": "jzhu", "password": "!"}
     self._auth_url = self.server + "/rest/auth/latest/session"
     self._api      = "/rest/api/latest"
