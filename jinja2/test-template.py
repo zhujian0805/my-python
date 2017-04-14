@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
 from jinja2 import Template
-template = Template('Hello {{ name }}!')
-print template.render(name='John Doe')
+
+aaa = [ 'one', 'two', 'three' ]
+
+template = Template('Hello {{ name|join("-") }}!')
+print template.render(name=aaa)
