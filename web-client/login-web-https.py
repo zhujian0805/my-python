@@ -42,15 +42,9 @@ RESULT = session_requests.get(
     headers=dict(referer=ACC_MGMT_URL)
 )
 
-# print RESULT.content
-# print RESULT.ok
-# print RESULT.status_code
-
-tree = html.fromstring(RESULT.content)
+tree = html.fromstring(RESULT.content.decode('utf8'))
 for p in tree.findall(".//p"):
     if isinstance(p.text, unicode) and len(p.text) < 45:
-        print type(p.text)
-        print len(p.text)
-        print binascii.b2a_uu(p.text)
-        print "YES it is"
+        if re.search(u'土豪的后裔#5424', p.text.decode('utf8')):
+            print "Matched"
 
