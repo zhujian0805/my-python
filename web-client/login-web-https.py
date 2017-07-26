@@ -45,6 +45,7 @@ RESULT = session_requests.get(
 tree = html.fromstring(RESULT.content.decode('utf8'))
 for p in tree.findall(".//p"):
     if isinstance(p.text, unicode) and len(p.text) < 45:
+        print p.text.decode('utf8')
         if re.search(u'土豪的后裔#5424', p.text.decode('utf8')):
             print "Matched"
 
