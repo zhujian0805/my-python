@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # coding=utf-8
+""" Testing web login """
 import sys
+import re
 import requests
 from lxml import html, etree
 from pprint import pprint
-import re
 import binascii
-import sys
 
 reload(sys)
 sys.setdefaultencoding('utf8')
