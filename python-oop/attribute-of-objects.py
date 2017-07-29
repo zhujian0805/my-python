@@ -1,5 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 # coding=utf-8
+""" This is for pylint """
 # ===============================================================================
 #
 #         FILE: test.py
@@ -23,18 +24,25 @@ import sys
 
 
 class FuckYou(object):
+    """ Pylint """
     def __init__(self):
-        pass
+        """ pylint """
+        self.fuck = "YES"
 
     def testing(self):
-        pass
+        """ pylint """
+        print self.fuck
+
+    def test01(self):
+        """ pylint """
+        print self.fuck
 
 
 if __name__ == "__main__":
-    print("yes")
-    print("all attributes of __main__")
-    print("-----------------------------------------------------")
-    print(dir(sys.modules["__main__"]))
-    print("all attributes of belonging object FuckYou's attributes")
-    print("-----------------------------------------------------")
-    print(dir(getattr(sys.modules["__main__"], "FuckYou")))
+    print "yes"
+    print "all attributes of __main__"
+    print "-----------------------------------------------------"
+    print dir(sys.modules["__main__"])
+    print "all attributes of belonging object FuckYou's attributes"
+    print "-----------------------------------------------------"
+    print dir(getattr(sys.modules["__main__"], "FuckYou"))
