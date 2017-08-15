@@ -2,7 +2,7 @@
 import pika
 import sys
 
-connection = pika.BlockingConnection(pika.ConnectionParameters( host='ip'))
+connection = pika.BlockingConnection(pika.ConnectionParameters( host=sys.argv[4]))
 
 channel = connection.channel()
 
