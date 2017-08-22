@@ -6,8 +6,8 @@ from email.MIMEText import MIMEText
 from email.MIMEImage import MIMEImage
 
 # Define these once; use them twice!
-strFrom = 'jzhu@blizzard.com'
-strTo = 'jzhu@blizzard.com'
+strFrom = 'jzhu@company.com'
+strTo = 'jzhu@company.com'
 
 # Create the root message and fill in the from, to, and subject headers
 msgRoot = MIMEMultipart('related')

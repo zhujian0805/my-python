@@ -6,8 +6,8 @@ from email.mime.text import MIMEText
 mail_host = 'connect-cn.james.com'
 mail_user = 'svcCNGameCCUreport@james.com'
 mail_pwd = 'XXXXXXXXXX'
-mail_to = 'jzhu@james.com,jzhu1@blizzard.com'
-mail_cc = 'jzhu@james.com, jzhu2@blizzard.com'
+mail_to = 'jzhu@james.com,jzhu1@company.com'
+mail_cc = 'jzhu@james.com, jzhu2@company.com'
 mail_bcc = 'jzhu@james.com'
 content = 'this is a mail sent with python'
 
