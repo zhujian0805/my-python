@@ -15,14 +15,12 @@ def get_vm_hostnames():
     
     for i in conn.listAllDomains():
       raw_xml = i.XMLDesc(0)
-      #pp(raw_xml)
       root = ET.fromstring(raw_xml)
-    
       for child in root.findall('metadata'):
         for c in child.findall('url:instance', ns):
           for cc in c:
-            if cc.tag == '{http://openstack.org/xmlns/libvirt/nova/1.0}name':
-              print(cc.tag,cc.text)
+            if cc.tag == '{%s}name' % ns['url']:
+              print(cc.text)
 
 if __name__ == '__main__':
   get_vm_hostnames()
