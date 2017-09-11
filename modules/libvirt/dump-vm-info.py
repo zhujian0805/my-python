@@ -18,6 +18,9 @@ if dom == None:
     exit(1)
 
 raw_xml = dom.XMLDesc(0)
+
+print(raw_xml)
+
 xml = minidom.parseString(raw_xml)
 domainTypes = xml.getElementsByTagName('nova:name')
 
