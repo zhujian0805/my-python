@@ -13,6 +13,11 @@ ramp_frames = 30
 # All it needs is the index to a camera port.
 camera = cv2.VideoCapture(camera_port)
 
+# Set the resolution for the photos
+camera.set(3, 1920)
+camera.set(4, 1200)
+#camera.set(15, 0.1)
+
 # Captures a single image from the camera and returns it in PIL format
 def get_image():
  # read is the easiest way to get a full image out of a VideoCapture object.
