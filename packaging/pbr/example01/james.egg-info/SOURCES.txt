@@ -1,0 +1,13 @@
+AUTHORS
+ChangeLog
+README.md
+setup.cfg
+setup.py
+james/__init__.py
+james.egg-info/PKG-INFO
+james.egg-info/SOURCES.txt
+james.egg-info/dependency_links.txt
+james.egg-info/entry_points.txt
+james.egg-info/not-zip-safe
+james.egg-info/pbr.json
+james.egg-info/top_level.txt
