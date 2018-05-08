@@ -19,11 +19,12 @@
 #     REVISION: ---
 #===============================================================================
 
-ttt = ''
+aaa = []
 
 def setit(it):
     ttt = it
+    aaa.append(it)
 
 def showit():
-    print(ttt)
+    print(aaa)
 
