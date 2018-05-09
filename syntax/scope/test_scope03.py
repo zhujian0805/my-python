@@ -28,3 +28,9 @@ def setit(it):
 def showit():
     print(aaa)
 
+
+if __name__ == '__main__':
+    setit(123)
+    showit()
+    setit(234)
+    showit()

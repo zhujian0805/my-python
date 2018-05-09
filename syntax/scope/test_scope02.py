@@ -28,3 +28,7 @@ def setit(it):
 def showit():
     print(ttt)
 
+
+if __name__ == "__main__":
+    setit("lsdfjlsjdf")
+    showit()
