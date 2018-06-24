@@ -5,19 +5,24 @@ This is for learning threading
 import threading
 import time
 
-def nonDaemonThread():
+
+def nondaemonthread():
     """ Testing """
     print("starting my thread")
     time.sleep(8)
     print("ending my thread")
-def daemonThread():
+
+
+def daemonthread():
     """ Testing """
     while True:
         print("Hello")
         time.sleep(2)
+
+
 if __name__ == '__main__':
-    nonDaemonThread = threading.Thread(target=nonDaemonThread)
-    daemonThread = threading.Thread(target=daemonThread)
-    daemonThread.setDaemon(True)
-    daemonThread.start()
-    nonDaemonThread.start()
+    nondaemonthread = threading.Thread(target=nondaemonthread)
+    daemonthread = threading.Thread(target=daemonthread)
+    daemonthread.setDaemon(True)
+    daemonthread.start()
+    nondaemonthread.start()
