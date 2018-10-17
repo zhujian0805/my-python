@@ -20,12 +20,10 @@ from testtools import matchers
 from pbr.tests import base
 from pbr import version
 
-
 from_pip_string = version.SemanticVersion.from_pip_string
 
 
 class TestSemanticVersion(base.BaseTestCase):
-
     def test_ordering(self):
         ordered_versions = [
             "1.2.3.dev6",
@@ -80,9 +78,8 @@ class TestSemanticVersion(base.BaseTestCase):
         parsed = from_pip_string('1.2.3.0a4.post6')
         self.expectThat(expected, matchers.Equals(parsed))
         # We can't define a mapping for .postN.devM, so it should raise.
-        self.expectThat(
-            lambda: from_pip_string('1.2.3.post5.dev6'),
-            matchers.raises(ValueError))
+        self.expectThat(lambda: from_pip_string('1.2.3.post5.dev6'),
+                        matchers.raises(ValueError))
 
     def test_from_pip_string_v_version(self):
         parsed = from_pip_string('v1.2.3')
@@ -93,9 +90,8 @@ class TestSemanticVersion(base.BaseTestCase):
         parsed = from_pip_string('V1.2.3.0a4.post6')
         self.expectThat(expected, matchers.Equals(parsed))
 
-        self.expectThat(
-            lambda: from_pip_string('x1.2.3'),
-            matchers.raises(ValueError))
+        self.expectThat(lambda: from_pip_string('x1.2.3'),
+                        matchers.raises(ValueError))
 
     def test_from_pip_string_legacy_nonzero_lead_in(self):
         # reported in bug 1361251
@@ -243,8 +239,7 @@ class TestSemanticVersion(base.BaseTestCase):
     def test_decrement_nonrelease(self):
         # The prior version of any non-release is a release
         semver = version.SemanticVersion(1, 2, 4, 'b', 1)
-        self.assertEqual(
-            version.SemanticVersion(1, 2, 3), semver.decrement())
+        self.assertEqual(version.SemanticVersion(1, 2, 3), semver.decrement())
 
     def test_decrement_nonrelease_zero(self):
         # We set an arbitrary max version of 9999 when decrementing versions
@@ -257,8 +252,7 @@ class TestSemanticVersion(base.BaseTestCase):
         # The next patch version of a release version requires a change to the
         # patch level.
         semver = version.SemanticVersion(2, 2, 5)
-        self.assertEqual(
-            version.SemanticVersion(2, 2, 4), semver.decrement())
+        self.assertEqual(version.SemanticVersion(2, 2, 4), semver.decrement())
 
     def test_increment_nonrelease(self):
         # The next patch version of a non-release version is another
@@ -277,8 +271,7 @@ class TestSemanticVersion(base.BaseTestCase):
         # The next patch version of a release version requires a change to the
         # patch level.
         semver = version.SemanticVersion(1, 2, 5)
-        self.assertEqual(
-            version.SemanticVersion(1, 2, 6), semver.increment())
+        self.assertEqual(version.SemanticVersion(1, 2, 6), semver.increment())
         self.assertEqual(
             version.SemanticVersion(1, 3, 0), semver.increment(minor=True))
         self.assertEqual(

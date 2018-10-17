@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+
 def sum2(nums):
     l = len(nums)
     if l == 0:
@@ -10,4 +11,4 @@ def sum2(nums):
         return nums[0] + nums[1]
 
 
-print sum2([1,2,3])
+print sum2([1, 2, 3])

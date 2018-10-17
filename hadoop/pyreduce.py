@@ -17,7 +17,7 @@ for line in sys.stdin:
         last_count += count
     else:
         if last_word:
-           print '%s\t%s' % (last_word, last_count)
+            print '%s\t%s' % (last_word, last_count)
         last_count = count
         last_word = cur_word
 

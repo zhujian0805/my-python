@@ -12,5 +12,4 @@ setup(
         jpg_image=image_plugin:make_jpeg_image_plugin
         png_image=image_plugin:make_jpeg_image_plugin
     """,
-
 )

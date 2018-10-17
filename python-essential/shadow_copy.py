@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
-a = [1,2,[12,32],3]
+a = [1, 2, [12, 32], 3]
 
 b = list(a)
 
 if b is a:
-  print "YES"
+    print "YES"
 
 b.append(100)
 

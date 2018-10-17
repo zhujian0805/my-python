@@ -1,12 +1,11 @@
 #!/usr/bin/env python
- 
 """
 Real time log files watcher supporting log rotation.
  
 Author: Giampaolo Rodola' <g.rodola [AT] gmail [DOT] com>
 License: MIT
 """
- 
+
 import os
 import time
 import errno
@@ -14,7 +13,8 @@ import stat
 import re
 from pprint import pprint
 import sys
- 
+
+
 class LogWatcher(object):
     """Looks for changes in all files of a directory.
     This is useful for watching log file changes in real-time.
@@ -28,7 +28,7 @@ class LogWatcher(object):
     >>> l = LogWatcher("/var/log/", callback)
     >>> l.loop()
     """
- 
+
     def __init__(self, folder, callback, extensions=sys.argv[1], tail_lines=0):
         """Arguments:
  
@@ -63,15 +63,15 @@ class LogWatcher(object):
                     print aline.strip()
                 else:
                     break
-            file.seek(file.tell())  # EOF
+            file.seek(file.tell())    # EOF
             if tail_lines:
                 lines = self.tail(file.name, tail_lines)
                 if lines:
                     self.callback(file.name, lines)
- 
+
     def __del__(self):
         self.close()
- 
+
     def loop(self, interval=0.1, async=False):
         """Start the loop.
         If async is True make one loop then return.
@@ -83,11 +83,11 @@ class LogWatcher(object):
             if async:
                 return
             time.sleep(interval)
- 
+
     def log(self, line):
         """Log when a file is un/watched"""
         print line
- 
+
     def listdir(self):
         """List directory and filter files by extension.
         You may want to override this to add extra logic or
@@ -99,7 +99,7 @@ class LogWatcher(object):
             if tfile == self.extensions:
                 files.append(tfile)
         return files
- 
+
     @staticmethod
     def tail(fname, window):
         """Read last N lines from file fname."""
@@ -130,7 +130,7 @@ class LogWatcher(object):
                 else:
                     block -= 1
             return data.splitlines()[-window:]
- 
+
     def update_files(self):
         ls = []
         for name in self.listdir():
@@ -145,7 +145,7 @@ class LogWatcher(object):
                     continue
                 fid = self.get_file_id(st)
                 ls.append((fid, absname))
- 
+
         # check existent files
         for fid, file in list(self.files_map.iteritems()):
             try:
@@ -160,17 +160,17 @@ class LogWatcher(object):
                     # same name but different file (rotation); reload it.
                     self.unwatch(file, fid)
                     self.watch(file.name)
- 
+
         # add new ones
         for fid, fname in ls:
             if fid not in self.files_map:
                 self.watch(fname)
- 
+
     def readfile(self, file):
         lines = file.readlines()
         if lines:
             self.callback(file.name, lines)
- 
+
     def watch(self, fname):
         try:
             file = open(fname, "r")
@@ -181,7 +181,7 @@ class LogWatcher(object):
         else:
             self.log("watching logfile %s" % fname)
             self.files_map[fid] = file
- 
+
     def unwatch(self, file, fid):
         # file no longer exists; if it has been renamed
         # try to read it for the last time in case the
@@ -191,23 +191,24 @@ class LogWatcher(object):
         del self.files_map[fid]
         if lines:
             self.callback(file.name, lines)
- 
+
     @staticmethod
     def get_file_id(st):
         return "%xg%x" % (st.st_dev, st.st_ino)
- 
+
     def close(self):
         for id, file in self.files_map.iteritems():
             file.close()
         self.files_map.clear()
- 
- 
+
+
 if __name__ == '__main__':
     import zlib
     import base64
     import time
 
     wfd = open("cde.log", "a")
+
     def callback(filename, lines):
         for line in lines:
             if re.match(r'root|admin', line):
@@ -216,7 +217,7 @@ if __name__ == '__main__':
                 wfd.flush()
             else:
                 continue
- 
+
     #print os.getcwd()
     l = LogWatcher(os.getcwd(), callback)
     l.loop()

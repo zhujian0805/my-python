@@ -52,13 +52,12 @@ import warnings
 
 from pbr import util
 
-
 if sys.version_info[0] == 3:
     string_type = str
-    integer_types = (int,)
+    integer_types = (int, )
 else:
-    string_type = basestring  # flake8: noqa
-    integer_types = (int, long)  # flake8: noqa
+    string_type = basestring    # flake8: noqa
+    integer_types = (int, long)    # flake8: noqa
 
 
 def pbr(dist, attr, value):
@@ -129,6 +128,6 @@ def pbr(dist, attr, value):
         dist.__class__.__bases__[-1].finalize_options(dist)
 
     # This bit comes out of distribute/setuptools
-    if isinstance(dist.metadata.version, integer_types + (float,)):
+    if isinstance(dist.metadata.version, integer_types + (float, )):
         # Some people apparently take "version number" too literally :)
         dist.metadata.version = str(dist.metadata.version)

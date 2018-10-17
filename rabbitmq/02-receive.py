@@ -2,7 +2,6 @@
 import pika
 import sys
 
-
 connection = pika.BlockingConnection(pika.ConnectionParameters(host='ip'))
 channel = connection.channel()
 
@@ -18,7 +17,11 @@ print ' [*] Waiting for logs. To exit press CTRL+C'
 
 
 def callback(ch, method, properties, body):
-    print " [x] %r:%r" % (method.routing_key, body,)
+    print " [x] %r:%r" % (
+        method.routing_key,
+        body,
+    )
+
 
 channel.basic_consume(callback, queue=sys.argv[2], no_ack=True)
 

@@ -10,6 +10,7 @@ from pprint import pprint
 import re
 import cgi, cgitb
 
+
 def readLoctions(path):
     fh = open(path)
     lines = {}
@@ -23,7 +24,8 @@ def readLoctions(path):
             lines[cols[0]]['slot'] = cols[1]
         else:
             break
-    return lines            
+    return lines
+
 
 if __name__ == "__main__":
     lines = readLoctions("/tmp/cn1.txt")

@@ -15,9 +15,7 @@ def escape_os_path(path):
 
 def exec_oe(cmd):
     process = subprocess.Popen(
-        shlex.split(cmd),
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE)
+        shlex.split(cmd), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     out, err = process.communicate()
     return (process.returncode, out, err)
 

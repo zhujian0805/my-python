@@ -4,7 +4,7 @@ import subprocess
 import sys
 import time
 
-cmd = [ "/bin/ping", "-c4", "-W2", 'hostname' ];
+cmd = ["/bin/ping", "-c4", "-W2", 'hostname']
 #cmd = '/bin/ls'
 #cmd = 'ps -ef'
 
@@ -15,10 +15,8 @@ except Exception as e:
     print e
     sys.exit(2)
 
-
 for line in proc.communicate()[0].splitlines():
-#for line in proc.communicate()[0]:
+    #for line in proc.communicate()[0]:
     print line
-
 
 time.sleep(1200)

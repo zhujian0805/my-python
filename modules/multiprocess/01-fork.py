@@ -11,7 +11,7 @@ else:
     #print os.waitpid(pid, os.WIFSTOPPED)
     #print os.waitpid(pid, os.WCONTINUED)
     #print os.waitpid(pid, os.WNOHANG)
-    pid, status = os.waitpid(pid, os.WUNTRACED|os.WNOHANG)
+    pid, status = os.waitpid(pid, os.WUNTRACED | os.WNOHANG)
     print pid
     print status
     while True:
@@ -19,4 +19,4 @@ else:
             wait()
             break
     print "end waiting"
-    time.sleep(20) 
+    time.sleep(20)

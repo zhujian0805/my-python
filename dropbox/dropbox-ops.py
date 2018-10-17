@@ -17,19 +17,20 @@ import logging
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-
 # create console handler and set level to debug
 ch = logging.StreamHandler()
 ch.setLevel(logging.DEBUG)
 
 # create formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+formatter = logging.Formatter(
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 # add formatter to ch
 ch.setFormatter(formatter)
 
 # add ch to logger
 logger.addHandler(ch)
+
 
 def click_allow(username, password, link):
 
@@ -53,8 +54,6 @@ def click_allow(username, password, link):
 
 
 class DropboxClass:
-
-    
     def __init__(self, key, secret, username, password, access_type):
         self.key = key
         self.secret = secret
@@ -65,7 +64,8 @@ class DropboxClass:
 
     def setSession(self):
 
-        self.sess = session.DropboxSession(self.key, self.secret, self.access_type)
+        self.sess = session.DropboxSession(self.key, self.secret,
+                                           self.access_type)
         request_token = self.sess.obtain_request_token()
         url = self.sess.build_authorize_url(request_token)
         logger.info("visit %s to authorize your app" % url)
@@ -76,14 +76,13 @@ class DropboxClass:
         access_token = self.sess.obtain_access_token(request_token)
         self.sess.set_token(access_token.key, access_token.secret)
 
-	
-    def getAccInfo(self):	
-	    self.dropbox_client = client.DropboxClient(self.sess)
-	    try:
-	        dropbox_info = self.dropbox_client.account_info()
-	        print dropbox_info
-	    except:
-	        print "Failed to get account_info"
+    def getAccInfo(self):
+        self.dropbox_client = client.DropboxClient(self.sess)
+        try:
+            dropbox_info = self.dropbox_client.account_info()
+            print dropbox_info
+        except:
+            print "Failed to get account_info"
 
     def dlfile(self):
         f, metadata = self.dropbox_client.get_file_and_metadata('testingfile')
@@ -96,13 +95,14 @@ class DropboxClass:
         folder_metadata = self.dropbox_client.metadata('/')
         pprint(folder_metadata)
 
-	
+
 def main(key, secret, username, password, access_type):
-    dropb = DropboxClass(key, secret, username, password,  access_type)
+    dropb = DropboxClass(key, secret, username, password, access_type)
     dropb.setSession()
     dropb.getAccInfo()
     dropb.dlfile()
     dropb.lsfile()
+
 
 if __name__ == '__main__':
     logger.info("Starting the script")

@@ -2,6 +2,7 @@
 from multiprocessing import Process, Queue
 import time
 
+
 def worker(input):
     for i in iter(input.get, 'STOP'):
         print "dequeue %s" % i
@@ -15,7 +16,7 @@ def main():
     task_queue = Queue()
 
     for i in range(100):
-            task_queue.put(str(i))
+        task_queue.put(str(i))
 
     for i in range(NUMBER_OF_PROCESSES):
         p = Process(target=worker, args=(task_queue, )).start()
@@ -27,6 +28,7 @@ def main():
     for i in range(NUMBER_OF_PROCESSES):
         print 'put in %d STOP' % i
         task_queue.put('STOP')
+
 
 if __name__ == '__main__':
     main()

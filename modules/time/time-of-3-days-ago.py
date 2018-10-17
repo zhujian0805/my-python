@@ -4,7 +4,7 @@ import time
 
 import datetime
 
-threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days = 3))
+threeDayAgo = (datetime.datetime.now() - datetime.timedelta(days=3))
 
 print threeDayAgo
 

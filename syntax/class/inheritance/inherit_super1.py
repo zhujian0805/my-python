@@ -31,4 +31,4 @@ class Teacher(SchoolMember):
 
 
 t = Teacher('Mrs. Shrividya', 40, 30000)
-print  # prints a blank line
+print    # prints a blank line

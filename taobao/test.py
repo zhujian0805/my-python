@@ -6,15 +6,12 @@ Created on 2012-7-3
 @author: lihao
 '''
 import top.api
-
-
 '''
 这边可以设置一个默认的appkey和secret，当然也可以不设置
 注意：默认的只需要设置一次就可以了
 
 '''
 top.setDefaultAppInfo("1021749512", "sandbox5d0d689c803e8dcb9e58333a3")
-
 '''
 使用自定义的域名和端口（测试沙箱环境使用）
 a = top.api.UserGetRequest("gw.api.tbsandbox.com",80)
@@ -27,18 +24,15 @@ a = top.api.UserGetRequest()
 
 '''
 a = top.api.UserGetRequest()
-
-
 '''
 可以在运行期替换掉默认的appkey和secret的设置
 a.set_app_info(top.appinfo("appkey","*******"))
 '''
 
-a.fields="nick"
+a.fields = "nick"
 
 try:
-    f= a.getResponse()
+    f = a.getResponse()
     print(f)
-except Exception,e:
+except Exception, e:
     print(e)
-    

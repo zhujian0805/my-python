@@ -26,7 +26,7 @@ from modules.classes import Application
 ConfigXML.apps = parsers.AppsXML()
 ConfigXML.build = parsers.BuildXML()
 
-BUILD_ECONOMY = {}  # key: ID, value: (Application class, {})
+BUILD_ECONOMY = {}    # key: ID, value: (Application class, {})
 
 
 def reload_configs():
@@ -51,11 +51,12 @@ def reload_configs():
                 "Successfully reloaded the build info for the 'in progress' builds."
             )
             logging.info(
-                "Successfully reloaded the build info for the 'in progress' builds.")
+                "Successfully reloaded the build info for the 'in progress' builds."
+            )
         except:
             print("Could not reload build info for build with id %s" % bid)
-            logging.info("Could not reload build info for build with id %s" %
-                         bid)
+            logging.info(
+                "Could not reload build info for build with id %s" % bid)
     except:
         print("Could not reload build.xml.")
         logging.info("Could not reload build.xml.")
@@ -105,17 +106,18 @@ class Builder(rpyc.Service):
             return (ERROR, "ERROR: Not a valid build id.")
 
         app = BUILD_ECONOMY[p_id]
-        app[1]["logger"].info("Build state before reset was: %d." %
-                              app[1]["status"])
+        app[1]["logger"].info(
+            "Build state before reset was: %d." % app[1]["status"])
 
-        app[1]["logger"].info("Resetting build state to: %d." %
-                              BuildStates.BUILD_STATE_WAITING)
+        app[1]["logger"].info(
+            "Resetting build state to: %d." % BuildStates.BUILD_STATE_WAITING)
 
         # actually reset the build state
         app[1]["status"] = BuildStates.BUILD_STATE_WAITING
 
-        return (SUCCESS, "Changed build state to: %d." %
-                BuildStates.BUILD_STATE_WAITING)
+        return (
+            SUCCESS,
+            "Changed build state to: %d." % BuildStates.BUILD_STATE_WAITING)
 
     def exposed_dump(self):
         fname = os.path.join(Config.get("home"), Config.get("dump_fname"))
@@ -162,11 +164,11 @@ BUILD_XML:
         # that means we didn't find an application with this name
         # return FAILURE
         if name is not None:
-            self.logger.error("Application with name %s could not be found." %
-                              name)
-            return (ERROR,
-                    "ERROR: Application with name %s could not be found." %
-                    name)
+            self.logger.error(
+                "Application with name %s could not be found." % name)
+            return (
+                ERROR,
+                "ERROR: Application with name %s could not be found." % name)
         return (SUCCESS, apps)
 
     def exposed_get_app_info(self, specified_region, name):
@@ -211,8 +213,8 @@ BUILD_XML:
             self.logger.error("Build id %s is already in use." % p_id)
             return (ERROR, "ERROR: Build id %s is already in use." % p_id)
 
-        self.logger.info("Setting up build id %s for application %s." %
-                         (p_id, p_name))
+        self.logger.info(
+            "Setting up build id %s for application %s." % (p_id, p_name))
         for app in ConfigXML.apps.get_apps(specified_region):
             if app["name"] == p_name:
                 app["region"] = specified_region
@@ -222,29 +224,33 @@ BUILD_XML:
                 # the filename for this logger will be REGION**APPNAME**ID**TIMESTAMP.log
                 logr_name = "%s.%s**%s**%s**%s" % (
                     self.logger_name, app["region"], p_name, p_id,
-                    time.strftime(Config.get("log_timestamp_fmt",
-                                             specified_region)))
+                    time.strftime(
+                        Config.get("log_timestamp_fmt", specified_region)))
                 logr = logging.getLogger(logr_name)
                 handler = logging.FileHandler("%s/%s.log" % (Config.get(
                     "logs", specified_region), logr_name))
-                handler.setFormatter(logging.Formatter(Config.get(
-                    "log_string_fmt", specified_region)))
+                handler.setFormatter(
+                    logging.Formatter(
+                        Config.get("log_string_fmt", specified_region)))
                 logr.addHandler(handler)
-                BUILD_ECONOMY[p_id] = (
-                    Application(
-                        copy.deepcopy(app), logr),
-                    {"status": BuildStates.BUILD_STATE_WAITING,
-                     "logger": logr,
-                     "logger_name": logr_name,
-                     "timestamp": time.strftime(Config.get("log_timestamp_fmt",
-                                                           specified_region))})
+                BUILD_ECONOMY[p_id] = (Application(copy.deepcopy(app), logr), {
+                    "status":
+                    BuildStates.BUILD_STATE_WAITING,
+                    "logger":
+                    logr,
+                    "logger_name":
+                    logr_name,
+                    "timestamp":
+                    time.strftime(
+                        Config.get("log_timestamp_fmt", specified_region))
+                })
                 self.logger.debug(
                     "Successful setup application %s with build id %s." %
                     (app["name"], p_id))
                 return (SUCCESS, p_id)
         self.logger.error("No application found with name %s." % p_name)
-        return (ERROR, "ERROR: No application found with that name %s." %
-                p_name)
+        return (ERROR,
+                "ERROR: No application found with that name %s." % p_name)
 
     def exposed_app_update(self, p_id, revision, checkout, dry_run):
         """
@@ -287,8 +293,8 @@ BUILD_XML:
         if revision == "HEAD":
             rev, msg, changes = appsvn.update(checkout=checkout)
         else:
-            rev, msg, changes = appsvn.update(rev=int(revision),
-                                              checkout=checkout)
+            rev, msg, changes = appsvn.update(
+                rev=int(revision), checkout=checkout)
         BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_WAITING
         if rev == -1 and msg == -1 and changes == []:
             tmpstr = "Project %s in svn location %s was not updated successfully." % (
@@ -307,7 +313,8 @@ BUILD_XML:
             applogger.info(appsvn.messages)
             BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_ERRORED
             self.logger.error(
-                "Could not update because I could not connect to the repository.")
+                "Could not update because I could not connect to the repository."
+            )
             return (
                 ERROR,
                 "ERROR: Could not update because I could not connect to the repository."
@@ -397,8 +404,8 @@ BUILD_XML:
 
         isjava6 = False
         print(BUILD_ECONOMY[p_id][0].flags)
-        if BUILD_ECONOMY[p_id][0].flags and (
-                BUILD_ECONOMY[p_id][0].flags.get("java6", "no") == "yes"):
+        if BUILD_ECONOMY[p_id][0].flags and (BUILD_ECONOMY[p_id][0].flags.get(
+                "java6", "no") == "yes"):
             isjava6 = True
 
         appname = BUILD_ECONOMY[p_id][0].name
@@ -414,8 +421,8 @@ BUILD_XML:
                 # BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_WAITING
                 BUILD_ECONOMY[p_id][1][
                     "status"] = BuildStates.BUILD_STATE_ERRORED
-                self.logger.error("No build type for application %s." %
-                                  appname)
+                self.logger.error(
+                    "No build type for application %s." % appname)
                 return (ERROR, "ERROR: No build type on this application.")
 
             isold = False
@@ -423,8 +430,8 @@ BUILD_XML:
                     BUILD_ECONOMY[p_id][0].flags.get("old", "no") == "yes"):
                 isold = True
             applogger.info("Performing an ant clean.")
-            res_clean = BUILD_ECONOMY[p_id][0].ant.clean(bflags, isold,
-                                                         isjava6)
+            res_clean = BUILD_ECONOMY[p_id][0].ant.clean(
+                bflags, isold, isjava6)
             if res_clean[0] == ERROR:
                 BUILD_ECONOMY[p_id][1][
                     "status"] = BuildStates.BUILD_STATE_ERRORED
@@ -433,10 +440,11 @@ BUILD_XML:
         # if we got here, we can build the application
         applogger.info("Building with the following flags: %s." % bflags)
         # if old is in the flags, call old build
-        if BUILD_ECONOMY[p_id][0].flags and (
-                BUILD_ECONOMY[p_id][0].flags.get("old", "no") == "yes"):
+        if BUILD_ECONOMY[p_id][0].flags and (BUILD_ECONOMY[p_id][0].flags.get(
+                "old", "no") == "yes"):
             applogger.info(
-                "This is a build that does not follow Simple Template Documentation.")
+                "This is a build that does not follow Simple Template Documentation."
+            )
             res = appant.build_old(bflags, isjava6)
         else:
             res = appant.build(bflags, isjava6)
@@ -451,8 +459,8 @@ BUILD_XML:
             BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_WAITING
 
         if res_clean:
-            return (res[0],
-                    (res_clean[1][0] + res[1][0], res_clean[1][1] + res[1][1]))
+            return (res[0], (res_clean[1][0] + res[1][0],
+                             res_clean[1][1] + res[1][1]))
         return (res[0], res[1])
 
     def _try_extract(self, svn_path, target, name, applogger, lastdir):
@@ -471,10 +479,10 @@ BUILD_XML:
             logging.error(
                 "Failed to execute 'tar xzf %s/dist/*-%s.tar.gz -C %s/%s/'." %
                 (svn_path, name, target, lastdir))
-            applogger.error("Will try to untar from target directory %s." %
-                            target)
-            logging.error("Will try to untar from target directory %s." %
-                          target)
+            applogger.error(
+                "Will try to untar from target directory %s." % target)
+            logging.error(
+                "Will try to untar from target directory %s." % target)
             applogger.info("Extracting tarball %s/dist/*-%s.tar.gz into %s/%s/"
                            % (target, name, target, lastdir))
             res = os.system("tar xzf %s/*-%s.tar.gz -C %s/%s/" %
@@ -495,10 +503,10 @@ BUILD_XML:
     def _extract_tarball(self, p_id, type_of_content, dry_run):
         # if we are here, this app has a svn path defined
         applogger = BUILD_ECONOMY[p_id][1]["logger"]
-        target = "%s/%s-%s" % (
-            BUILD_ECONOMY[p_id][0].svn.path,
-            Config.get("target", BUILD_ECONOMY[p_id][0].region),
-            BUILD_ECONOMY[p_id][0].region)
+        target = "%s/%s-%s" % (BUILD_ECONOMY[p_id][0].svn.path,
+                               Config.get("target",
+                                          BUILD_ECONOMY[p_id][0].region),
+                               BUILD_ECONOMY[p_id][0].region)
 
         res = -1
         if type_of_content == "static":
@@ -535,8 +543,9 @@ BUILD_XML:
             return (SUCCESS, "%s tarball for %s extracted." % (
                 type_of_content.capitalize(), BUILD_ECONOMY[p_id][0].name))
         else:
-            applogger.error("Failed to extract %s tarball for %s." % (
-                type_of_content.capitalize(), BUILD_ECONOMY[p_id][0].name))
+            applogger.error(
+                "Failed to extract %s tarball for %s." %
+                (type_of_content.capitalize(), BUILD_ECONOMY[p_id][0].name))
             return (ERROR, "Failed to extract %s tarball for %s." % (
                 type_of_content.capitalize(), BUILD_ECONOMY[p_id][0].name))
 
@@ -544,15 +553,16 @@ BUILD_XML:
         applogger = BUILD_ECONOMY[p_id][1]["logger"]
         flags = copy.deepcopy(BUILD_ECONOMY[p_id][0].flags)
 
-        target = "%s/%s-%s" % (
-            BUILD_ECONOMY[p_id][0].svn.path,
-            Config.get("target", BUILD_ECONOMY[p_id][0].region),
-            BUILD_ECONOMY[p_id][0].region)
+        target = "%s/%s-%s" % (BUILD_ECONOMY[p_id][0].svn.path,
+                               Config.get("target",
+                                          BUILD_ECONOMY[p_id][0].region),
+                               BUILD_ECONOMY[p_id][0].region)
         src_dir = "%s/%s/" % (target, type_of_content)
 
         if flags.get("loc%s" % type_of_content.capitalize()) is not None:
-            src_dir = "%s%s" % (BUILD_ECONOMY[p_id][0].svn.path, flags.get(
-                "loc%s" % type_of_content.capitalize()))
+            src_dir = "%s%s" % (BUILD_ECONOMY[p_id][0].svn.path,
+                                flags.get(
+                                    "loc%s" % type_of_content.capitalize()))
         else:
             if not os.path.isdir(src_dir):
                 if type_of_content == "static":
@@ -562,8 +572,8 @@ BUILD_XML:
                     src_dir = "%s%s" % (BUILD_ECONOMY[p_id][0].svn.path,
                                         "/dist/webapp/")
 
-        applogger.info("Source directory for this application will be: %s" %
-                       src_dir)
+        applogger.info(
+            "Source directory for this application will be: %s" % src_dir)
 
         res = -1
         # set up the common rsync command line we want to use
@@ -583,28 +593,30 @@ BUILD_XML:
                 # try to delete directory TARGET if it was copied
                 applogger.debug(
                     "Sync was successful, removing folder %s/www/%s*" %
-                    (target, Config.get("target", BUILD_ECONOMY[p_id][
-                        0].region).strip("/").split("/")[0]))
-                res = os.system("rm -rf %s/www/%s*" % (target, Config.get(
-                    "target",
-                    BUILD_ECONOMY[p_id][0].region).strip("/").split("/")[0]))
+                    (target, Config.get("target", BUILD_ECONOMY[p_id][0].
+                                        region).strip("/").split("/")[0]))
+                res = os.system(
+                    "rm -rf %s/www/%s*" %
+                    (target, Config.get("target", BUILD_ECONOMY[p_id][0].
+                                        region).strip("/").split("/")[0]))
         elif type_of_content == "dynamic":
             applogger.debug("Creating folder %s/webapp/" % target)
             functions.exec_oe("mkdir -p %s/webapp/" % target)
             # rsyncs content into target directory ignoring the target directory
             # else applications like launcher (EU old) would not work
-            applogger.debug('Executing: %s %s/webapp/' %
-                            (rsync_cmdline, target))
+            applogger.debug(
+                'Executing: %s %s/webapp/' % (rsync_cmdline, target))
             res = os.system("%s %s/webapp/" % (rsync_cmdline, target))
             if res == 0:
                 # try to delete directory TARGET if it was copied
                 applogger.debug(
                     "Sync was successful, removing folder %s/webapp/%s" %
-                    (target, Config.get("target", BUILD_ECONOMY[p_id][
-                        0].region).strip("/").split("/")[0]))
-                res = os.system("rm -rf %s/webapp/%s*" % (target, Config.get(
-                    "target",
-                    BUILD_ECONOMY[p_id][0].region).strip("/").split("/")[0]))
+                    (target, Config.get("target", BUILD_ECONOMY[p_id][0].
+                                        region).strip("/").split("/")[0]))
+                res = os.system(
+                    "rm -rf %s/webapp/%s*" %
+                    (target, Config.get("target", BUILD_ECONOMY[p_id][0].
+                                        region).strip("/").split("/")[0]))
 
         if res == 0:
             applogger.info(
@@ -613,10 +625,9 @@ BUILD_XML:
             logging.info(
                 "Successfully copied the %s content to the correct location for application %s."
                 % (type_of_content, BUILD_ECONOMY[p_id][0].name))
-            return (SUCCESS,
-                    "%s content for %s copied to the correct location.\n" %
-                    (type_of_content.capitalize(),
-                     BUILD_ECONOMY[p_id][0].name))
+            return (
+                SUCCESS, "%s content for %s copied to the correct location.\n"
+                % (type_of_content.capitalize(), BUILD_ECONOMY[p_id][0].name))
         applogger.info(
             "Failed to copy the %s content to the correct location for application %s."
             % (type_of_content, BUILD_ECONOMY[p_id][0].name))
@@ -630,10 +641,11 @@ BUILD_XML:
         applogger = BUILD_ECONOMY[p_id][1]["logger"]
 
         if dry_run:
-            applogger.debug("DRY_RUN: ssh %s %s/apps.py --type %s %s" % (
-                Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region),
-                type_of_content, BUILD_ECONOMY[p_id][0].name))
+            applogger.debug(
+                "DRY_RUN: ssh %s %s/apps.py --type %s %s" %
+                (Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
+                 Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region),
+                 type_of_content, BUILD_ECONOMY[p_id][0].name))
 
             # XXX: implement for applications with the old flag
             if type_of_content == "static":
@@ -656,10 +668,11 @@ BUILD_XML:
             return (SUCCESS, "Deployed %s %s content to the nfs." %
                     (BUILD_ECONOMY[p_id][0].name, type_of_content))
 
-        applogger.debug("Executing: ssh %s %s/apps.py --type %s %s" % (
-            Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-            Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region),
-            type_of_content, BUILD_ECONOMY[p_id][0].name))
+        applogger.debug(
+            "Executing: ssh %s %s/apps.py --type %s %s" %
+            (Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
+             Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region),
+             type_of_content, BUILD_ECONOMY[p_id][0].name))
 
         rcode, output, error = functions.exec_oe(
             "ssh %s %s/apps.py --type %s %s" %
@@ -688,8 +701,8 @@ BUILD_XML:
                     (BUILD_ECONOMY[p_id][0].svn.path,
                      Config.get("target", BUILD_ECONOMY[p_id][0].region),
                      BUILD_ECONOMY[p_id][0].region,
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
                 res = os.system(
                     r'rsync %s %s %s %s/%s-%s/www/ %s:%s' %
                     (Config.get("rsync_opts"), rsync_opts,
@@ -697,8 +710,8 @@ BUILD_XML:
                      BUILD_ECONOMY[p_id][0].svn.path,
                      Config.get("target", BUILD_ECONOMY[p_id][0].region),
                      BUILD_ECONOMY[p_id][0].region,
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
             else:
                 applogger.info(
                     'Executing: rsync %s %s %s %s/dist/%s/www/ %s:%s' %
@@ -706,8 +719,8 @@ BUILD_XML:
                      Config.get("rsync_nfs_excludes"),
                      BUILD_ECONOMY[p_id][0].svn.path,
                      BUILD_ECONOMY[p_id][0].ant.binfo.get("build.type", ""),
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
 
                 res = os.system(
                     r'rsync %s %s %s %s/dist/%s/www/ %s:%s' %
@@ -715,8 +728,8 @@ BUILD_XML:
                      Config.get("rsync_nfs_excludes"),
                      BUILD_ECONOMY[p_id][0].svn.path,
                      BUILD_ECONOMY[p_id][0].ant.binfo.get("build.type", ""),
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
 
         if type_of_content == "dynamic":
             if old:
@@ -725,8 +738,8 @@ BUILD_XML:
                     (BUILD_ECONOMY[p_id][0].svn.path,
                      Config.get("target", BUILD_ECONOMY[p_id][0].region),
                      BUILD_ECONOMY[p_id][0].region,
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
                 res = os.system(
                     r'rsync %s %s %s %s/%s-%s/webapp/ %s:%s' %
                     (Config.get("rsync_opts"), rsync_opts,
@@ -734,8 +747,8 @@ BUILD_XML:
                      BUILD_ECONOMY[p_id][0].svn.path,
                      Config.get("target", BUILD_ECONOMY[p_id][0].region),
                      BUILD_ECONOMY[p_id][0].region,
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
             else:
                 applogger.info(
                     'Executing: rsync %s %s %s %s/dist/%s/webapp/ %s:%s' %
@@ -743,8 +756,8 @@ BUILD_XML:
                      Config.get("rsync_nfs_excludes"),
                      BUILD_ECONOMY[p_id][0].svn.path,
                      BUILD_ECONOMY[p_id][0].ant.binfo.get("build.type", ""),
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
 
                 res = os.system(
                     r'rsync %s %s %s %s/dist/%s/webapp/ %s:%s' %
@@ -752,8 +765,8 @@ BUILD_XML:
                      Config.get("rsync_nfs_excludes"),
                      BUILD_ECONOMY[p_id][0].svn.path,
                      BUILD_ECONOMY[p_id][0].ant.binfo.get("build.type", ""),
-                     Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                     nfs_folder))
+                     Config.get("nfs_ip",
+                                BUILD_ECONOMY[p_id][0].region), nfs_folder))
         if res == 0:
             # XXX: Changing ownership on the NFS. This is stupid as it is. Do NOT do it!
             res_own = os.system(
@@ -982,7 +995,8 @@ BUILD_XML:
 
         if nonfs:
             applogger.info(
-                "nonfs flag was passed and this is an application that follows the Simple Template Documentation.")
+                "nonfs flag was passed and this is an application that follows the Simple Template Documentation."
+            )
             applogger.info(
                 "You will not see any content on the nfs at this point.")
             BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_WAITING
@@ -990,11 +1004,8 @@ BUILD_XML:
                 BUILD_ECONOMY[p_id][0].region = tmp_region
             return (SUCCESS, "")
 
-        res = self._rsync_deploy(p_id,
-                                 type_content,
-                                 flags,
-                                 rsync_delete,
-                                 dry_run=dry_run)
+        res = self._rsync_deploy(
+            p_id, type_content, flags, rsync_delete, dry_run=dry_run)
         BUILD_ECONOMY[p_id][1]["status"] = BuildStates.BUILD_STATE_WAITING
         if tmp_region is not None:
             BUILD_ECONOMY[p_id][0].region = tmp_region
@@ -1002,9 +1013,10 @@ BUILD_XML:
 
     def _run_deploy(self, p_id, cmd, ip=None, appname=None, type_content=None):
         if ip != None:
-            return os.system(cmd % (
-                Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
-                Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region), ip))
+            return os.system(
+                cmd % (Config.get("nfs_ip", BUILD_ECONOMY[p_id][0].region),
+                       Config.get("nfs_utils", BUILD_ECONOMY[p_id][0].region),
+                       ip))
 
         # if we don't pass an ip, we have an appname and type_content for sure
         if (appname == None) and (type_content == None):
@@ -1035,8 +1047,8 @@ BUILD_XML:
         if ip != "":
             res = self._run_deploy(p_id, DeployController.FORCE_RESTART, ip=ip)
             if res == 0:
-                return (SUCCESS, "Successfully restarted the tomcat on ip %s."
-                        % ip)
+                return (SUCCESS,
+                        "Successfully restarted the tomcat on ip %s." % ip)
             return (ERROR, "Could not restart the tomcat on ip %s." % ip)
 
         appname = BUILD_ECONOMY[p_id][0].name
@@ -1055,17 +1067,19 @@ BUILD_XML:
 
         res = -1
         if type_content:
-            res = self._run_deploy(p_id,
-                                   DeployController.RESTART,
-                                   appname=appname,
-                                   type_content=type_content)
+            res = self._run_deploy(
+                p_id,
+                DeployController.RESTART,
+                appname=appname,
+                type_content=type_content)
         else:
             msg = ""
             if BUILD_ECONOMY[p_id][0].flags.get("static", "yes") == "yes":
-                res = self._run_deploy(p_id,
-                                       DeployController.RESTART,
-                                       appname=appname,
-                                       type_content="static")
+                res = self._run_deploy(
+                    p_id,
+                    DeployController.RESTART,
+                    appname=appname,
+                    type_content="static")
                 if res == 0:
                     msg = "%s%s" % (
                         msg,
@@ -1075,10 +1089,11 @@ BUILD_XML:
                         msg, "Could not touch deploy file for static.\n\n")
 
             if BUILD_ECONOMY[p_id][0].flags.get("dynamic", "yes") == "yes":
-                res = self._run_deploy(p_id,
-                                       DeployController.RESTART,
-                                       appname=appname,
-                                       type_content="dynamic")
+                res = self._run_deploy(
+                    p_id,
+                    DeployController.RESTART,
+                    appname=appname,
+                    type_content="dynamic")
                 if res == 0:
                     msg = "%s%s" % (
                         msg,
@@ -1145,17 +1160,19 @@ BUILD_XML:
 
         res = -1
         if type_content:
-            res = self._run_deploy(p_id,
-                                   DeployController.SYNC,
-                                   appname=appname,
-                                   type_content=type_content)
+            res = self._run_deploy(
+                p_id,
+                DeployController.SYNC,
+                appname=appname,
+                type_content=type_content)
         else:
             msg = ""
             if BUILD_ECONOMY[p_id][0].flags.get("static", "yes") == "yes":
-                res = self._run_deploy(p_id,
-                                       DeployController.SYNC,
-                                       appname=appname,
-                                       type_content="static")
+                res = self._run_deploy(
+                    p_id,
+                    DeployController.SYNC,
+                    appname=appname,
+                    type_content="static")
                 if res == 0:
                     msg = "%s%s" % (
                         msg,
@@ -1165,10 +1182,11 @@ BUILD_XML:
                         msg, "Could not touch deploy file for static.\n\n")
 
             if BUILD_ECONOMY[p_id][0].flags.get("dynamic", "yes") == "yes":
-                res = self._run_deploy(p_id,
-                                       DeployController.SYNC,
-                                       appname=appname,
-                                       type_content="dynamic")
+                res = self._run_deploy(
+                    p_id,
+                    DeployController.SYNC,
+                    appname=appname,
+                    type_content="dynamic")
                 if res == 0:
                     msg = "%s%s" % (
                         msg,
@@ -1199,11 +1217,13 @@ BUILD_XML:
 
 
 if __name__ == '__main__':
-    logging.basicConfig(filename="%s/server-%s" % (Config.get(
-        "server_logs"), time.strftime(Config.get("log_timestamp_fmt"))),
-                        level=logging.DEBUG,
-                        format=Config.get("log_string_fmt"),
-                        datefmt=Config.get("log_timestamp_fmt"))
+    logging.basicConfig(
+        filename="%s/server-%s" % (Config.get("server_logs"),
+                                   time.strftime(
+                                       Config.get("log_timestamp_fmt"))),
+        level=logging.DEBUG,
+        format=Config.get("log_string_fmt"),
+        datefmt=Config.get("log_timestamp_fmt"))
 
     signal.signal(signal.SIGHUP, reload_config_handler)
     ThreadedServer(Builder, port=Config.get("server_port")).start()

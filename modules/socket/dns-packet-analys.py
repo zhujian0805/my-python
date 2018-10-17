@@ -17,13 +17,13 @@ DNS_NOTIFY = 4
 DNS_UPDATE = 5
 
 # Flags
-DNS_CD = 0x0010 # checking disabled
-DNS_AD = 0x0020 # authenticated data
-DNS_Z =  0x0040 # unused
-DNS_RA = 0x0080 # recursion available
-DNS_RD = 0x0100 # recursion desired
-DNS_TC = 0x0200 # truncated
-DNS_AA = 0x0400 # authoritative answer
+DNS_CD = 0x0010    # checking disabled
+DNS_AD = 0x0020    # authenticated data
+DNS_Z = 0x0040    # unused
+DNS_RA = 0x0080    # recursion available
+DNS_RD = 0x0100    # recursion desired
+DNS_TC = 0x0200    # truncated
+DNS_AA = 0x0400    # authoritative answer
 
 # Response codes
 DNS_RCODE_NOERR = 0
@@ -56,11 +56,14 @@ DNS_CHAOS = 3
 DNS_HESIOD = 4
 DNS_ANY = 255
 
+
 def addr2str(addrobj):
     if len(addrobj) != 4:
         return "addr error!"
     else:
-        return str(ord(addrobj[0]))+"."+str(ord(addrobj[1]))+"."+str(ord(addrobj[2]))+"."+str(ord(addrobj[3]))
+        return str(ord(addrobj[0])) + "." + str(ord(addrobj[1])) + "." + str(
+            ord(addrobj[2])) + "." + str(ord(addrobj[3]))
+
 
 def TCPorUDP(obj):
     if (ord(obj) == 0x01):
@@ -82,7 +85,8 @@ def TCPorUDP(obj):
     else:
         return "error"
 
-def dns_response_body_parse(body):        # parse the response message's body
+
+def dns_response_body_parse(body):    # parse the response message's body
     identification = body[0:2]
     flag = body[2:4]
     num_ques = body[4:6]
@@ -92,59 +96,60 @@ def dns_response_body_parse(body):        # parse the response message's body
     query_name = ''
     ans_ip = []
     flag = 12
-    while(ord(body[flag])!=0x0):
-        query_name = query_name + body[flag+1:flag+ord(body[flag])+1]
+    while (ord(body[flag]) != 0x0):
+        query_name = query_name + body[flag + 1:flag + ord(body[flag]) + 1]
         flag = flag + ord(body[flag]) + 1
         try:
             if ord(body[flag]) != 0x0:
-                query_name = query_name+'.'
+                query_name = query_name + '.'
         except Exception, e:
             print "error when parse query domain name"
     #print query_name
     flag = flag + 1
-    query_type = ord(body[flag])*256 + ord(body[flag+1])
-    if query_type == 0x01:            # use domain query IP addr
+    query_type = ord(body[flag]) * 256 + ord(body[flag + 1])
+    if query_type == 0x01:    # use domain query IP addr
         flag = flag + 4
         i = 1
-        answer_num = ord(num_ans_RR[0])*256 + ord(num_ans_RR[1])
-        while(i<=answer_num):
+        answer_num = ord(num_ans_RR[0]) * 256 + ord(num_ans_RR[1])
+        while (i <= answer_num):
             if ord(body[flag]) == 0xc0:
                 flag = flag + 2
             else:
-                while(ord(body[flag])!=0x0):
+                while (ord(body[flag]) != 0x0):
                     flag = flag + ord(body[flag]) + 1
                 flag = flag + 1
-            if (    ord(body[flag])*256+ord(body[flag+1]) == DNS_A 
-                and ord(body[flag+2])*256+ord(body[flag+3]) == DNS_IN):
+            if (ord(body[flag]) * 256 + ord(body[flag + 1]) == DNS_A and
+                    ord(body[flag + 2]) * 256 + ord(body[flag + 3]) == DNS_IN):
                 flag = flag + 8
-                RR_data_len = ord(body[flag])*256 + ord(body[flag+1])
+                RR_data_len = ord(body[flag]) * 256 + ord(body[flag + 1])
                 if RR_data_len == 4:
-                    ans_ip.append(addr2str(body[flag+2:flag+6]))
-                flag = flag + ord(body[flag])*256 + ord(body[flag+1]) + 2
+                    ans_ip.append(addr2str(body[flag + 2:flag + 6]))
+                flag = flag + ord(body[flag]) * 256 + ord(body[flag + 1]) + 2
             else:
                 flag = flag + 8
-                flag = flag + ord(body[flag])*256 + ord(body[flag+1]) + 2
+                flag = flag + ord(body[flag]) * 256 + ord(body[flag + 1]) + 2
             i = i + 1
     else:
         print "query type is PTR not A"
         return
-    return "%s\t%s"%(query_name,ans_ip)
+    return "%s\t%s" % (query_name, ans_ip)
+
 
 def main():
     paralen = len(sys.argv)
     if paralen != 3:
-        print ("there is only %d parameter, %s"%(paralen,sys.argv))
+        print("there is only %d parameter, %s" % (paralen, sys.argv))
         print "no enough parameter!"
         print "command should be: python *.py result.txt src_pcap_file.pcap"
         return
 
-    print "parse result will write to:"+sys.argv[1]
-    print "strat parse the pcap file:"+sys.argv[2]
+    print "parse result will write to:" + sys.argv[1]
+    print "strat parse the pcap file:" + sys.argv[2]
 
-    fw = open(sys.argv[1],"w")
-    f = file(sys.argv[2],"rb")
+    fw = open(sys.argv[1], "w")
+    f = file(sys.argv[2], "rb")
     pcap = dpkt.pcap.Reader(f)
-    for ts,buf in pcap:
+    for ts, buf in pcap:
         #fw.writelines("timestamp:"+str(ts)+"\tpacket len:"+str(len(buf))+"\n")
         ethheader = buf[0:14]
         dstmac = ethheader[0:6]
@@ -160,28 +165,32 @@ def main():
         #fw.writelines("dstIP:"+addr2str(dstip)+"\tsrcIP:"+addr2str(srcip)+"\n")
         #fw.writelines("packet type:"+TCPorUDP(trans_type)+"\n")
 
-        if (ord(trans_type) == 0x11):     #UDP
+        if (ord(trans_type) == 0x11):    #UDP
             udpheader = buf[34:42]
             srcport = udpheader[0:2]
             dstport = udpheader[2:4]
             udplen = udpheader[4:6]
             #fw.writelines("srcport:"+str(ord(srcport[1])+ord(srcport[0])*16*16)+"\tdstport:"+str(ord(dstport[1])+ord(dstport[0])*16*16)+"\n\n")
-            bodylen = ord(udplen[0])*256+ord(udplen[1])-8
-            print "\ndns body length is "+str(bodylen)
-            dnsbody = buf[42:(42+bodylen)]
+            bodylen = ord(udplen[0]) * 256 + ord(udplen[1]) - 8
+            print "\ndns body length is " + str(bodylen)
+            dnsbody = buf[42:(42 + bodylen)]
             if (ord(dstport[0]) == 0x00 and ord(dstport[1]) == 0x35):
                 print "this is a DNS Request"
             elif (ord(srcport[0]) == 0x00 and ord(srcport[1]) == 0x35):
                 print "this is a DNS Response"
-                fw.writelines(dns_response_body_parse(dnsbody)+"\n")    # wirte result to file
+                fw.writelines(dns_response_body_parse(dnsbody) +
+                              "\n")    # wirte result to file
             else:
-                print ord(srcport[0]),ord(srcport[0])
-        elif (ord(trans_type) == 0x06):     #TCP
+                print ord(srcport[0]), ord(srcport[0])
+        elif (ord(trans_type) == 0x06):    #TCP
             tcpheader = buf[34:54]
             srcport = tcpheader[0:2]
             dstport = tcpheader[2:4]
             #fw.writelines("srcport:"+str(ord(srcport[1])+ord(srcport[0])*16*16)+"\tdstport:"+str(ord(dstport[1])+ord(dstport[0])*16*16)+"\n\n")
     f.close()
-    print ("process %s has finished, the result was in file %s"%(sys.argv[2],sys.argv[1]))
+    print("process %s has finished, the result was in file %s" % (sys.argv[2],
+                                                                  sys.argv[1]))
+
+
 if __name__ == "__main__":
     main()

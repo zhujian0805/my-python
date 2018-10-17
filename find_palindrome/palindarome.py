@@ -1,11 +1,11 @@
 #!/usr/bin/python
 
 import sys
- 
 
-def is_palindrome(smallstring):   
 
-    reverse = smallstring[::-1]   
+def is_palindrome(smallstring):
+
+    reverse = smallstring[::-1]
 
     if smallstring == reverse:
 
@@ -15,37 +15,31 @@ def is_palindrome(smallstring):
 
         return 0
 
- 
 
 def find_pals(bigstring):
 
     pal_list = []
 
- 
+    for x in range(0, len(bigstring)):
 
-    for x in range(0,len(bigstring)):
+        for y in range(0, len(bigstring)):
 
-        for y in range(0,len(bigstring)):
-
-            substring = bigstring[x:y+1]
+            substring = bigstring[x:y + 1]
 
             if y < x or len(substring) < 2:
 
-                continue           
+                continue
 
-            else:               
+            else:
 
-                if is_palindrome(substring):               
+                if is_palindrome(substring):
 
                     pal_list.append(substring)
 
- 
+    print len(pal_list), "palindromes found:\n", pal_list, "\n"
 
-    print len(pal_list), "palindromes found:\n", pal_list, "\n"       
+    print max(pal_list, key=len), 'is the largest palindrome'
 
-    print max(pal_list, key=len), 'is the largest palindrome'       
-
-    
 
 def main():
 
@@ -53,7 +47,6 @@ def main():
 
     find_pals(word_of_interest)
 
- 
 
 if __name__ == "__main__":
 

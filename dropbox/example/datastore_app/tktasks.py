@@ -40,11 +40,13 @@ from urllib3.exceptions import HTTPError
 from dropbox.client import (
     DropboxClient,
     ErrorResponse,
-    )
+)
 from dropbox.datastore import (
-    DatastoreManager, Date,
-    DatastoreError, DatastoreNotFoundError,
-    )
+    DatastoreManager,
+    Date,
+    DatastoreError,
+    DatastoreNotFoundError,
+)
 
 # Virtual event to wake up the Tk main loop.
 REFRESH_EVENT = '<<refresh-datastore>>'
@@ -54,7 +56,6 @@ SERIALIZED_DATASTORE = 'my_tasks.json'
 
 
 class TaskList(Frame):
-
     def __init__(self, master, client):
         Frame.__init__(self, master)
         # Connect to Dropbox and open datastore.
@@ -74,10 +75,11 @@ class TaskList(Frame):
         self.datastore = datastore
         self.table = self.datastore.get_table('tasks')
         # Set up communication with background thread.
-        self.queue = Queue()  # Holds deltas sent from background thread.
-        self.display_rev = 0  # Last revision displayed.
-        self.refresh()  # Initial display update.
-        self.bind(REFRESH_EVENT, self.refresh)  # Respond to background thread.
+        self.queue = Queue()    # Holds deltas sent from background thread.
+        self.display_rev = 0    # Last revision displayed.
+        self.refresh()    # Initial display update.
+        self.bind(REFRESH_EVENT,
+                  self.refresh)    # Respond to background thread.
         # Create, configure and start background thread.
         self.bg_thread = Thread(name='bgthread', target=self.bg_run)
         self.bg_thread.setDaemon(True)
@@ -124,7 +126,8 @@ class TaskList(Frame):
         deltamap = None
         backoff = 0
         while True:
-            cursor_map = DatastoreManager.make_cursor_map([self.datastore], deltamap)
+            cursor_map = DatastoreManager.make_cursor_map([self.datastore],
+                                                          deltamap)
             try:
                 _, _, deltamap = self.manager.await(datastores=cursor_map)
             except Exception as exc:
@@ -136,7 +139,7 @@ class TaskList(Frame):
                 else:
                     print 'bg_run():', repr(exc), str(exc)
                 # Randomized exponential backoff, clipped to 5 minutes.
-                backoff = min(backoff*2, 300) + random.random()
+                backoff = min(backoff * 2, 300) + random.random()
                 time.sleep(backoff)
                 continue
             else:
@@ -160,14 +163,14 @@ class TaskList(Frame):
     def refresh(self, event=None):
         # This is called directly when we have made a change,
         # and when the background thread sends a REFRESH_EVENT.
-        self.load_queue()  # Update the datastore.
+        self.load_queue()    # Update the datastore.
         if self.datastore.get_rev() == self.display_rev:
-            return  # Nothing to do.
-        self.forget()  # Hide the frame to reduce flashing.
+            return    # Nothing to do.
+        self.forget()    # Hide the frame to reduce flashing.
         for w in self.winfo_children():
-            w.destroy()  # Delete the old widgets.
-        self.redraw()  # Create new widgets.
-        self.pack(fill=BOTH, expand=1)  # Show the frame.
+            w.destroy()    # Delete the old widgets.
+        self.redraw()    # Create new widgets.
+        self.pack(fill=BOTH, expand=1)    # Show the frame.
         self.display_rev = self.datastore.get_rev()
         title = self.datastore.get_title()
         mtime = self.datastore.get_mtime()
@@ -196,38 +199,43 @@ class TaskList(Frame):
         self.grid_columnconfigure(2, weight=1)
         row = 0
         # Add a new row of widgets for each task.
-        for rec in sorted(self.table.query(), key=lambda rec: rec.get('created')):
+        for rec in sorted(
+                self.table.query(), key=lambda rec: rec.get('created')):
             # Extract the fields we need.
             completed = rec.get('completed')
             taskname = rec.get('taskname')
             # Create a button with an 'X' in it, to delete the task.
-            close_btn = Button(self, text='X',
-                               command=lambda rec=rec: self.delete_rec(rec))
+            close_btn = Button(
+                self, text='X', command=lambda rec=rec: self.delete_rec(rec))
             close_btn.grid(row=row, column=0)
             # Create a checkbox, to mark it completed (or not).
             var = BooleanVar(self, value=completed)
-            completed_btn = Checkbutton(self, variable=var,
-                                        command=lambda rec=rec, var=var:
-                                                self.toggle_rec(rec, var))
+            completed_btn = Checkbutton(
+                self,
+                variable=var,
+                command=lambda rec=rec, var=var: self.toggle_rec(rec, var))
             completed_btn.grid(row=row, column=1)
             # Create a label showing the task name.
             taskname_lbl = Label(self, text=taskname, anchor=W)
             taskname_lbl.grid(row=row, column=2, columnspan=2, sticky=W)
-            row += 1  # Bump row index.
+            row += 1    # Bump row index.
         # Add a final row with the input and button to add new tasks.
         self.input = Entry(self)
         self.input.bind('<Return>', self.add_rec)
-        self.input.grid(row=row, column=0, columnspan=3, sticky=W+E)
+        self.input.grid(row=row, column=0, columnspan=3, sticky=W + E)
         add_btn = Button(self, text='Add Task', command=self.add_rec)
         add_btn.grid(row=row, column=3)
         # Add save button.  (Auto-save is left as an exercise.)
         save_btn = Button(self, text='Save local snapshot', command=self.save)
-        save_btn.grid(row=row+1, column=0, columnspan=3, sticky=W)
+        save_btn.grid(row=row + 1, column=0, columnspan=3, sticky=W)
 
     def add_rec(self, event=None):
         # Callback to add a new task.
-        self.do_transaction(self.table.insert,
-                            completed=False, taskname=self.input.get(), created=Date())
+        self.do_transaction(
+            self.table.insert,
+            completed=False,
+            taskname=self.input.get(),
+            created=Date())
 
     def delete_rec(self, rec):
         # Callback to delete a task.
@@ -242,9 +250,12 @@ class TaskList(Frame):
             var.set(rec.get('completed'))
 
     def do_transaction(self, func, *args, **kwds):
-        self.update_idletasks()  # Refresh screen without handling more input.
+        self.update_idletasks(
+        )    # Refresh screen without handling more input.
+
         def call_func():
             func(*args, **kwds)
+
         try:
             self.datastore.transaction(call_func, max_tries=4)
         except Exception as exc:
@@ -257,8 +268,8 @@ class TaskList(Frame):
 
 def main():
     if not sys.argv[1:]:
-        print >>sys.stderr, 'Usage: tktasks.py ACCESS_TOKEN'
-        print >>sys.stderr, 'You can use shtasks.py to get an access token.'
+        print >> sys.stderr, 'Usage: tktasks.py ACCESS_TOKEN'
+        print >> sys.stderr, 'You can use shtasks.py to get an access token.'
         sys.exit(2)
 
     access_token = sys.argv[1]

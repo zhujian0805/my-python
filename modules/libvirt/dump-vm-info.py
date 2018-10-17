@@ -14,7 +14,7 @@ if conn == None:
 
 dom = conn.lookupByName('instance-00029ff0')
 if dom == None:
-    print('Failed to find the domain '+domName, file=sys.stderr)
+    print('Failed to find the domain ' + domName, file=sys.stderr)
     exit(1)
 
 raw_xml = dom.XMLDesc(0)

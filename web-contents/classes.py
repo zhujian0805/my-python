@@ -104,17 +104,18 @@ class BuildManager(object):
         # change to path
         os.chdir(self.cur_path)
         if isold:
-            functions.export_var("TARGET_DIR", "%s%s-%s" %
-                                 (self.cur_path.rstrip("/"), Config.get(
-                                     "target", self.region), self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
-                                                             self.region))
+            functions.export_var(
+                "TARGET_DIR",
+                "%s%s-%s" % (self.cur_path.rstrip("/"),
+                             Config.get("target", self.region), self.region))
+        functions.export_var(self._CMD_HOME_NAME,
+                             Config.get(self._CMD_NAME, self.region))
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat",
-                                                         self.region))
+        functions.export_var("CATALINA_HOME", Config.get(
+            "tomcat", self.region))
         if "build.type" in self.binfo:
             result = functions.exec_oe(
                 self._CMD_CLEAN %
@@ -144,12 +145,13 @@ class BuildManager(object):
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat",
-                                                         self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
-                                                             self.region))
-        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr, Config.get(
-            self._CMD_TARGET_NAME, self.region))
+        functions.export_var("CATALINA_HOME", Config.get(
+            "tomcat", self.region))
+        functions.export_var(self._CMD_HOME_NAME,
+                             Config.get(self._CMD_NAME, self.region))
+        self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr,
+                                           Config.get(self._CMD_TARGET_NAME,
+                                                      self.region))
         result = functions.exec_oe(self.buildcmd)
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
@@ -174,17 +176,18 @@ class BuildManagerOld(BuildManager):
 
         flagstr = self._build_flags_str()
         os.chdir(self.cur_path)
-        functions.export_var("TARGET_DIR", "%s%s-%s" %
-                             (self.cur_path.rstrip("/"), Config.get(
-                                 "target", self.region), self.region))
+        functions.export_var(
+            "TARGET_DIR",
+            "%s%s-%s" % (self.cur_path.rstrip("/"),
+                         Config.get("target", self.region), self.region))
         if isjava6:
             functions.export_var("JAVA_HOME", Config.get("java6", self.region))
         else:
             functions.export_var("JAVA_HOME", Config.get("java", self.region))
-        functions.export_var("CATALINA_HOME", Config.get("tomcat",
-                                                         self.region))
-        functions.export_var(self._CMD_HOME_NAME, Config.get(self._CMD_NAME,
-                                                             self.region))
+        functions.export_var("CATALINA_HOME", Config.get(
+            "tomcat", self.region))
+        functions.export_var(self._CMD_HOME_NAME,
+                             Config.get(self._CMD_NAME, self.region))
         self.buildcmd = self._CMD_BUILD % (self._CMD_NAME, flagstr,
                                            self.binfo["target"])
         result = functions.exec_oe(self.buildcmd)
@@ -283,9 +286,8 @@ class Svn(object):
         # if it fails during the cleanup or the update
         # after the cleanup, do really raise the exception.
         try:
-            rev_ = self.client.update(self.path,
-                                      recurse=True,
-                                      revision=revision)
+            rev_ = self.client.update(
+                self.path, recurse=True, revision=revision)
         except pysvn.ClientError, e:
             try:
                 # if this is not successful, *probably* means that we don't
@@ -297,9 +299,8 @@ class Svn(object):
 
                 # cleanup messages if there are any
                 self.messages = []
-                rev_ = self.client.update(self.path,
-                                          recurse=True,
-                                          revision=revision)
+                rev_ = self.client.update(
+                    self.path, recurse=True, revision=revision)
             except pysvn.ClientError, ee:
                 print ee
                 locale.setlocale(locale.LC_ALL, "%s.%s" % (lcode, enc))
@@ -315,8 +316,8 @@ class Svn(object):
     def _log(self, dct):
         if dct['action'] == pysvn.wc_notify_action.update_completed:
             self.revision_update_complete = dct['revision']
-        elif dct['path'] != '' and SVN_NOTIFICATIONS[dct[
-                'action']] is not None:
+        elif dct['path'] != '' and SVN_NOTIFICATIONS[
+                dct['action']] is not None:
             msg = '%s %s' % (SVN_NOTIFICATIONS[dct['action']], dct['path'])
             self.messages.append(msg)
 
@@ -365,21 +366,21 @@ class Application(object):
             if not self.read_only:
                 self.svn = Svn(
                     functions.get_real_svn_location(self.path),
-                    Config.get("svn", self.region) +
-                    functions.escape_os_path(self.path), self.logger)
+                    Config.get("svn", self.region) + functions.escape_os_path(
+                        self.path), self.logger)
             if self.btype:
                 if self.flags.get("dynamic",
                                   "yes") == "yes" and not self.read_only:
                     if self.flags.get("maven", "no") == "yes":
-                        self.ant = Maven(self.name, self.btype, self.region,
-                                         Config.get("svn", self.region) +
-                                         functions.escape_os_path(self.path),
-                                         self.logger)
+                        self.ant = Maven(
+                            self.name, self.btype, self.region,
+                            Config.get("svn", self.region) +
+                            functions.escape_os_path(self.path), self.logger)
                     else:
-                        self.ant = Ant(self.name, self.btype, self.region,
-                                       Config.get("svn", self.region) +
-                                       functions.escape_os_path(self.path),
-                                       self.logger)
+                        self.ant = Ant(
+                            self.name, self.btype, self.region,
+                            Config.get("svn", self.region) +
+                            functions.escape_os_path(self.path), self.logger)
 
         if "fs" in dct:
             if "static" in dct["fs"]:
@@ -398,8 +399,8 @@ class Application(object):
                 if self.ant:
                     del self.ant
                 self._load_config(copy.deepcopy(app))
-                return (SUCCESS, "Application %s reloaded successfully." %
-                        self.name)
+                return (SUCCESS,
+                        "Application %s reloaded successfully." % self.name)
         return (ERROR, """I could not load this application anymore: %s.\n
                 If you changed an application name you do need to _restart_ the build server."""
                 % self.name)
@@ -452,8 +453,8 @@ class Application(object):
         if self.btype:
             str_ += ",projectBuild=%s" % self.btype
 
-        tmp_s = ','.join(["%s=%s" % (name, value)
-                          for (name, value) in self.flags.items()])
+        tmp_s = ','.join(
+            ["%s=%s" % (name, value) for (name, value) in self.flags.items()])
         if tmp_s != '':
             str_ += ",projectFlags=[%s]" % (tmp_s)
 

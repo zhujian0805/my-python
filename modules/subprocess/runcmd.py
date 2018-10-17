@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 #cmd = [ '/bin/ls', '/tmp' ]
-cmd = [ 'top', '-n 1' ]
+cmd = ['top', '-n 1']
 #cmd = '/bin/ls'
 #cmd = 'ps -ef'
 
@@ -15,7 +15,6 @@ except Exception as e:
     print e
     sys.exit(2)
 
-
 for line in proc.communicate()[0].splitlines():
-#for line in proc.communicate()[0]:
+    #for line in proc.communicate()[0]:
     print line

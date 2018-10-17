@@ -29,5 +29,4 @@ company:
 
 print yyy
 
-
-print yaml.dump( { 'name': "James Zhu", 'family': [ 'Nemo', "lily" ] } )
+print yaml.dump({'name': "James Zhu", 'family': ['Nemo', "lily"]})

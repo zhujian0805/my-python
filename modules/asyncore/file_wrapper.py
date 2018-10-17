@@ -5,11 +5,11 @@
 #
 """
 """
-  
+
 #end_pymotw_header
 import asyncore
 import sys
-  
+
 #if not hasattr(asyncore.file_wrapper, 'getsockopt'):
 #    # Python 2.7 and early versions of Python 3.x are missing the
 #    # getsockopt() method of asyncore.file_wrapper, so an
@@ -24,23 +24,24 @@ import sys
 #            return 0
 #        raise NotImplmentedError('Only asyncore-specific behavior implemented')
 #    asyncore.file_wrapper.getsockopt = monkey_patch_getsockopt
-  
+
+
 class FileReader(asyncore.file_dispatcher):
-  
     def readable(self):
         return True
 
     def handle_read(self):
         data = self.recv(4)
         print 'READ: (%d)\n%r' % (len(data), data)
-  
+
     def handle_expt(self):
         # Ignore events that look like out of band data
         pass
-  
+
     def handle_close(self):
         self.close()
-  
+
+
 reader = FileReader(sys.stdin)
 #reader = FileReader(open("/etc/passwd"))
 asyncore.loop()

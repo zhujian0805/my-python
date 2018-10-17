@@ -10,6 +10,6 @@ dateArray = datetime.datetime.utcfromtimestamp(timeStamp)
 
 print dateArray
 
-threeDayAgo = dateArray - datetime.timedelta(days = 3)
+threeDayAgo = dateArray - datetime.timedelta(days=3)
 
 print threeDayAgo

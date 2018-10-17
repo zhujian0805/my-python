@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+
 def sum3(nums):
     sum = 0
     for i in nums:
@@ -7,4 +8,4 @@ def sum3(nums):
     return sum
 
 
-print sum3([1,2,3])
+print sum3([1, 2, 3])

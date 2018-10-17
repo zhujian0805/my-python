@@ -2,11 +2,13 @@
 Created by auto_sdk on 2014-03-10 13:11:08
 '''
 from top.api.base import RestApi
-class SimbaCampaignAddRequest(RestApi):
-	def __init__(self,domain='gw.api.taobao.com',port=80):
-		RestApi.__init__(self,domain, port)
-		self.nick = None
-		self.title = None
 
-	def getapiname(self):
-		return 'taobao.simba.campaign.add'
+
+class SimbaCampaignAddRequest(RestApi):
+    def __init__(self, domain='gw.api.taobao.com', port=80):
+        RestApi.__init__(self, domain, port)
+        self.nick = None
+        self.title = None
+
+    def getapiname(self):
+        return 'taobao.simba.campaign.add'

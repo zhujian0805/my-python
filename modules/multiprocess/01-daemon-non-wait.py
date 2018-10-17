@@ -16,6 +16,7 @@ def daemon():
     print 'Exiting :', p.name, p.pid
     sys.stdout.flush()
 
+
 def non_daemon():
     """ This is a demo """
     p = multiprocessing.current_process()
@@ -23,6 +24,7 @@ def non_daemon():
     sys.stdout.flush()
     print 'Exiting :', p.name, p.pid
     sys.stdout.flush()
+
 
 if __name__ == '__main__':
     """ Demo, This is for a demostration \

@@ -44,8 +44,8 @@ class Student(SchoolMember):
 t = Teacher('Mrs. Shrividya', 40, 30000)
 s = Student('Swaroop', 22, 75)
 
-print  # prints a blank line
+print    # prints a blank line
 
 members = [t, s]
 for member in members:
-    member.tell()  # works for both Teachers and Students
+    member.tell()    # works for both Teachers and Students

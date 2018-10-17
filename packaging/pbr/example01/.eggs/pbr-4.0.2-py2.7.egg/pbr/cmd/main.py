@@ -25,8 +25,8 @@ import pbr.version
 def _get_metadata(package_name):
     try:
         return json.loads(
-            pkg_resources.get_distribution(
-                package_name).get_metadata('pbr.json'))
+            pkg_resources.get_distribution(package_name).get_metadata(
+                'pbr.json'))
     except pkg_resources.DistributionNotFound:
         raise Exception('Package {0} not installed'.format(package_name))
     except Exception:
@@ -40,8 +40,8 @@ def get_sha(args):
 
 
 def get_info(args):
-    print("{name}\t{version}\t{released}\t{sha}".format(
-        **_get_info(args.name)))
+    print(
+        "{name}\t{version}\t{released}\t{sha}".format(**_get_info(args.name)))
 
 
 def _get_info(name):
@@ -68,8 +68,8 @@ def _get_info(name):
 
 
 def freeze(args):
-    sorted_dists = sorted(pkg_resources.working_set,
-                          key=lambda dist: dist.project_name.lower())
+    sorted_dists = sorted(
+        pkg_resources.working_set, key=lambda dist: dist.project_name.lower())
     for dist in sorted_dists:
         info = _get_info(dist.project_name)
         output = "{name}=={version}".format(**info)
@@ -82,7 +82,9 @@ def main():
     parser = argparse.ArgumentParser(
         description='pbr: Python Build Reasonableness')
     parser.add_argument(
-        '-v', '--version', action='version',
+        '-v',
+        '--version',
+        action='version',
         version=str(pbr.version.VersionInfo('pbr')))
 
     subparsers = parser.add_subparsers(

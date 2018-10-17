@@ -9,9 +9,9 @@ d = []
 t = []
 fh = open("data.txt")
 for line in fh.readlines():
-  dstamp, temp = line.rstrip().split(" ")
-  d.append(datetime.strptime(dstamp, '%Y-%m-%d-%H-%M-%S'))
-  t.append(int(temp))
+    dstamp, temp = line.rstrip().split(" ")
+    d.append(datetime.strptime(dstamp, '%Y-%m-%d-%H-%M-%S'))
+    t.append(int(temp))
 fh.close()
 
 mins = dates.MinuteLocator()

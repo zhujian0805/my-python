@@ -4,6 +4,7 @@ from Queue import Empty
 
 q = Queue()
 
+
 def consumer_worker(q):
     while True:
         try:
@@ -13,15 +14,17 @@ def consumer_worker(q):
             print "The Queue is empty!!!"
             break
 
+
 def producer_worker(q):
-    for i in xrange(1,100):
+    for i in xrange(1, 100):
         q.put("Hello World!!!")
-    
-p = Process(target=producer_worker, args=(q,))
+
+
+p = Process(target=producer_worker, args=(q, ))
 p.start()
 p.join()
 
-p1 = Process(target=consumer_worker, args=(q,))
+p1 = Process(target=consumer_worker, args=(q, ))
 p1.start()
 p1.join()
 

@@ -62,7 +62,6 @@ from pbr import git
 from pbr import packaging
 from pbr.tests import base
 
-
 PBR_ROOT = os.path.abspath(os.path.join(__file__, '..', '..', '..'))
 
 
@@ -95,8 +94,8 @@ class TestRepo(fixtures.Fixture):
         base._run_cmd(['git', 'reset', '--hard', 'HEAD^'], self._basedir)
 
     def tag(self, version):
-        base._run_cmd(
-            ['git', 'tag', '-sm', 'test tag', version], self._basedir)
+        base._run_cmd(['git', 'tag', '-sm', 'test tag', version],
+                      self._basedir)
 
 
 class GPGKeyFixture(fixtures.Fixture):
@@ -189,8 +188,8 @@ class Venv(fixtures.Fixture):
         command = [python] + self.pip_cmd + ['-U']
         if self.modules and len(self.modules) > 0:
             command.extend(self.modules)
-            self.useFixture(base.CapturedSubprocess(
-                'mkvenv-' + self._reason, command))
+            self.useFixture(
+                base.CapturedSubprocess('mkvenv-' + self._reason, command))
         self.addCleanup(delattr, self, 'path')
         self.addCleanup(delattr, self, 'python')
         self.path = path
@@ -206,7 +205,9 @@ class CreatePackages(fixtures.Fixture):
     """
 
     defaults = {
-        'setup.py': textwrap.dedent(six.u("""\
+        'setup.py':
+        textwrap.dedent(
+            six.u("""\
             #!/usr/bin/env python
             import setuptools
             setuptools.setup(
@@ -214,7 +215,9 @@ class CreatePackages(fixtures.Fixture):
                 pbr=True,
             )
         """)),
-        'setup.cfg': textwrap.dedent(six.u("""\
+        'setup.cfg':
+        textwrap.dedent(
+            six.u("""\
             [metadata]
             name = {pkg_name}
         """))
@@ -314,9 +317,10 @@ class TestPackagingInGitRepoWithCommit(base.BaseTestCase):
 
     def test_manifest_exclude_honoured(self):
         self.run_setup('sdist', allow_fail=False)
-        with open(os.path.join(
-                self.package_dir,
-                'pbr_testpackage.egg-info/SOURCES.txt'), 'r') as f:
+        with open(
+                os.path.join(self.package_dir,
+                             'pbr_testpackage.egg-info/SOURCES.txt'),
+                'r') as f:
             body = f.read()
         self.assertThat(
             body, matchers.Not(matchers.Contains('pbr_testpackage/extra.py')))
@@ -324,24 +328,19 @@ class TestPackagingInGitRepoWithCommit(base.BaseTestCase):
 
     def test_install_writes_changelog(self):
         stdout, _, _ = self.run_setup(
-            'install', '--root', self.temp_dir + 'installed',
-            allow_fail=False)
+            'install', '--root', self.temp_dir + 'installed', allow_fail=False)
         self.expectThat(stdout, matchers.Contains('Generating ChangeLog'))
 
 
 class TestExtrafileInstallation(base.BaseTestCase):
     def test_install_glob(self):
         stdout, _, _ = self.run_setup(
-            'install', '--root', self.temp_dir + 'installed',
-            allow_fail=False)
-        self.expectThat(
-            stdout, matchers.Contains('copying data_files/a.txt'))
-        self.expectThat(
-            stdout, matchers.Contains('copying data_files/b.txt'))
+            'install', '--root', self.temp_dir + 'installed', allow_fail=False)
+        self.expectThat(stdout, matchers.Contains('copying data_files/a.txt'))
+        self.expectThat(stdout, matchers.Contains('copying data_files/b.txt'))
 
 
 class TestPackagingInGitRepoWithoutCommit(base.BaseTestCase):
-
     def setUp(self):
         super(TestPackagingInGitRepoWithoutCommit, self).setUp()
         self.useFixture(TestRepo(self.package_dir))
@@ -361,7 +360,6 @@ class TestPackagingInGitRepoWithoutCommit(base.BaseTestCase):
 
 
 class TestPackagingWheels(base.BaseTestCase):
-
     def setUp(self):
         super(TestPackagingWheels, self).setUp()
         self.useFixture(TestRepo(self.package_dir))
@@ -370,8 +368,8 @@ class TestPackagingWheels(base.BaseTestCase):
         # Slowly construct the path to the generated whl
         dist_dir = os.path.join(self.package_dir, 'dist')
         relative_wheel_filename = os.listdir(dist_dir)[0]
-        absolute_wheel_filename = os.path.join(
-            dist_dir, relative_wheel_filename)
+        absolute_wheel_filename = os.path.join(dist_dir,
+                                               relative_wheel_filename)
         wheel_file = wheel.install.WheelFile(absolute_wheel_filename)
         wheel_name = wheel_file.parsed_filename.group('namever')
         # Create a directory path to unpack the wheel to
@@ -382,8 +380,8 @@ class TestPackagingWheels(base.BaseTestCase):
 
     def test_data_directory_has_wsgi_scripts(self):
         # Build the path to the scripts directory
-        scripts_dir = os.path.join(
-            self.extracted_wheel_dir, 'pbr_testpackage-0.0.data/scripts')
+        scripts_dir = os.path.join(self.extracted_wheel_dir,
+                                   'pbr_testpackage-0.0.data/scripts')
         self.assertTrue(os.path.exists(scripts_dir))
         scripts = os.listdir(scripts_dir)
 
@@ -393,63 +391,57 @@ class TestPackagingWheels(base.BaseTestCase):
         self.assertNotIn('pbr_test_cmd_with_class', scripts)
 
     def test_generates_c_extensions(self):
-        built_package_dir = os.path.join(
-            self.extracted_wheel_dir, 'pbr_testpackage')
+        built_package_dir = os.path.join(self.extracted_wheel_dir,
+                                         'pbr_testpackage')
         static_object_filename = 'testext.so'
         soabi = get_soabi()
         if soabi:
             static_object_filename = 'testext.{0}.so'.format(soabi)
-        static_object_path = os.path.join(
-            built_package_dir, static_object_filename)
+        static_object_path = os.path.join(built_package_dir,
+                                          static_object_filename)
 
         self.assertTrue(os.path.exists(built_package_dir))
         self.assertTrue(os.path.exists(static_object_path))
 
 
 class TestPackagingHelpers(testtools.TestCase):
-
     def test_generate_script(self):
         group = 'console_scripts'
         entry_point = pkg_resources.EntryPoint(
             name='test-ep',
             module_name='pbr.packaging',
-            attrs=('LocalInstallScripts',))
+            attrs=('LocalInstallScripts', ))
         header = '#!/usr/bin/env fake-header\n'
         template = ('%(group)s %(module_name)s %(import_target)s '
                     '%(invoke_target)s')
 
-        generated_script = packaging.generate_script(
-            group, entry_point, header, template)
+        generated_script = packaging.generate_script(group, entry_point,
+                                                     header, template)
 
         expected_script = (
             '#!/usr/bin/env fake-header\nconsole_scripts pbr.packaging '
-            'LocalInstallScripts LocalInstallScripts'
-        )
+            'LocalInstallScripts LocalInstallScripts')
         self.assertEqual(expected_script, generated_script)
 
     def test_generate_script_validates_expectations(self):
         group = 'console_scripts'
         entry_point = pkg_resources.EntryPoint(
-            name='test-ep',
-            module_name='pbr.packaging')
+            name='test-ep', module_name='pbr.packaging')
         header = '#!/usr/bin/env fake-header\n'
         template = ('%(group)s %(module_name)s %(import_target)s '
                     '%(invoke_target)s')
-        self.assertRaises(
-            ValueError, packaging.generate_script, group, entry_point, header,
-            template)
+        self.assertRaises(ValueError, packaging.generate_script, group,
+                          entry_point, header, template)
 
         entry_point = pkg_resources.EntryPoint(
             name='test-ep',
             module_name='pbr.packaging',
             attrs=('attr1', 'attr2', 'attr3'))
-        self.assertRaises(
-            ValueError, packaging.generate_script, group, entry_point, header,
-            template)
+        self.assertRaises(ValueError, packaging.generate_script, group,
+                          entry_point, header, template)
 
 
 class TestPackagingInPlainDirectory(base.BaseTestCase):
-
     def setUp(self):
         super(TestPackagingInPlainDirectory, self).setUp()
 
@@ -467,29 +459,24 @@ class TestPackagingInPlainDirectory(base.BaseTestCase):
 
     def test_install_no_ChangeLog(self):
         stdout, _, _ = self.run_setup(
-            'install', '--root', self.temp_dir + 'installed',
-            allow_fail=False)
+            'install', '--root', self.temp_dir + 'installed', allow_fail=False)
         self.expectThat(
             stdout, matchers.Not(matchers.Contains('Generating ChangeLog')))
 
 
 class TestPresenceOfGit(base.BaseTestCase):
-
     def testGitIsInstalled(self):
-        with mock.patch.object(git,
-                               '_run_shell_command') as _command:
+        with mock.patch.object(git, '_run_shell_command') as _command:
             _command.return_value = 'git version 1.8.4.1'
             self.assertEqual(True, git._git_is_installed())
 
     def testGitIsNotInstalled(self):
-        with mock.patch.object(git,
-                               '_run_shell_command') as _command:
+        with mock.patch.object(git, '_run_shell_command') as _command:
             _command.side_effect = OSError
             self.assertEqual(False, git._git_is_installed())
 
 
 class ParseRequirementsTest(base.BaseTestCase):
-
     def test_empty_requirements(self):
         actual = packaging.parse_requirements([])
         self.assertEqual([], actual)
@@ -503,8 +490,8 @@ class ParseRequirementsTest(base.BaseTestCase):
         # the defaults are relative to where pbr is called from so we need to
         # override them. This is OK, however, as we want to validate that
         # defaults are used - not what those defaults are
-        with mock.patch.object(packaging, 'REQUIREMENTS_FILES', (
-                requirements,)):
+        with mock.patch.object(packaging, 'REQUIREMENTS_FILES',
+                               (requirements, )):
             result = packaging.parse_requirements()
         self.assertEqual(['pbr'], result)
 
@@ -515,8 +502,7 @@ class ParseRequirementsTest(base.BaseTestCase):
             fh.write("foo\nbar")
         self.useFixture(
             fixtures.EnvironmentVariable('PBR_REQUIREMENTS_FILES', tmp_file))
-        self.assertEqual(['foo', 'bar'],
-                         packaging.parse_requirements())
+        self.assertEqual(['foo', 'bar'], packaging.parse_requirements())
 
     def test_override_with_env_multiple_files(self):
         _, tmp_file = tempfile.mkstemp(prefix='openstack', suffix='.setup')
@@ -525,8 +511,7 @@ class ParseRequirementsTest(base.BaseTestCase):
         self.useFixture(
             fixtures.EnvironmentVariable('PBR_REQUIREMENTS_FILES',
                                          "no-such-file," + tmp_file))
-        self.assertEqual(['foo', 'bar'],
-                         packaging.parse_requirements())
+        self.assertEqual(['foo', 'bar'], packaging.parse_requirements())
 
     def test_index_present(self):
         tempdir = tempfile.mkdtemp()
@@ -551,22 +536,18 @@ class ParseRequirementsTest(base.BaseTestCase):
 
     @mock.patch('warnings.warn')
     def test_python_version(self, mock_warn):
-        with open("requirements-py%d.txt" % sys.version_info[0],
-                  "w") as fh:
+        with open("requirements-py%d.txt" % sys.version_info[0], "w") as fh:
             fh.write("# this is a comment\nfoobar\n# and another one\nfoobaz")
-        self.assertEqual(['foobar', 'foobaz'],
-                         packaging.parse_requirements())
+        self.assertEqual(['foobar', 'foobaz'], packaging.parse_requirements())
         mock_warn.assert_called_once_with(mock.ANY, DeprecationWarning)
 
     @mock.patch('warnings.warn')
     def test_python_version_multiple_options(self, mock_warn):
         with open("requirements-py1.txt", "w") as fh:
             fh.write("thisisatrap")
-        with open("requirements-py%d.txt" % sys.version_info[0],
-                  "w") as fh:
+        with open("requirements-py%d.txt" % sys.version_info[0], "w") as fh:
             fh.write("# this is a comment\nfoobar\n# and another one\nfoobaz")
-        self.assertEqual(['foobar', 'foobaz'],
-                         packaging.parse_requirements())
+        self.assertEqual(['foobar', 'foobaz'], packaging.parse_requirements())
         # even though we have multiple offending files, this should only be
         # called once
         mock_warn.assert_called_once_with(mock.ANY, DeprecationWarning)
@@ -574,34 +555,53 @@ class ParseRequirementsTest(base.BaseTestCase):
 
 class ParseRequirementsTestScenarios(base.BaseTestCase):
 
-    versioned_scenarios = [
-        ('non-versioned', {'versioned': False, 'expected': ['bar']}),
-        ('versioned', {'versioned': True, 'expected': ['bar>=1.2.3']})
-    ]
+    versioned_scenarios = [('non-versioned', {
+        'versioned': False,
+        'expected': ['bar']
+    }), ('versioned', {
+        'versioned': True,
+        'expected': ['bar>=1.2.3']
+    })]
 
     scenarios = [
-        ('normal', {'url': "foo\nbar", 'expected': ['foo', 'bar']}),
+        ('normal', {
+            'url': "foo\nbar",
+            'expected': ['foo', 'bar']
+        }),
         ('normal_with_comments', {
             'url': "# this is a comment\nfoo\n# and another one\nbar",
-            'expected': ['foo', 'bar']}),
-        ('removes_index_lines', {'url': '-f foobar', 'expected': []}),
+            'expected': ['foo', 'bar']
+        }),
+        ('removes_index_lines', {
+            'url': '-f foobar',
+            'expected': []
+        }),
     ]
 
     scenarios = scenarios + testscenarios.multiply_scenarios([
-        ('ssh_egg_url', {'url': 'git+ssh://foo.com/zipball#egg=bar'}),
-        ('git_https_egg_url', {'url': 'git+https://foo.com/zipball#egg=bar'}),
-        ('http_egg_url', {'url': 'https://foo.com/zipball#egg=bar'}),
+        ('ssh_egg_url', {
+            'url': 'git+ssh://foo.com/zipball#egg=bar'
+        }),
+        ('git_https_egg_url', {
+            'url': 'git+https://foo.com/zipball#egg=bar'
+        }),
+        ('http_egg_url', {
+            'url': 'https://foo.com/zipball#egg=bar'
+        }),
     ], versioned_scenarios)
 
     scenarios = scenarios + testscenarios.multiply_scenarios(
-        [
-            ('git_egg_url',
-                {'url': 'git://foo.com/zipball#egg=bar', 'name': 'bar'})
-        ], [
-            ('non-editable', {'editable': False}),
-            ('editable', {'editable': True}),
-        ],
-        versioned_scenarios)
+        [('git_egg_url', {
+            'url': 'git://foo.com/zipball#egg=bar',
+            'name': 'bar'
+        })], [
+            ('non-editable', {
+                'editable': False
+            }),
+            ('editable', {
+                'editable': True
+            }),
+        ], versioned_scenarios)
 
     def test_parse_requirements(self):
         tmp_file = tempfile.NamedTemporaryFile()
@@ -617,25 +617,22 @@ class ParseRequirementsTestScenarios(base.BaseTestCase):
 
 
 class ParseDependencyLinksTest(base.BaseTestCase):
-
     def setUp(self):
         super(ParseDependencyLinksTest, self).setUp()
-        _, self.tmp_file = tempfile.mkstemp(prefix="openstack",
-                                            suffix=".setup")
+        _, self.tmp_file = tempfile.mkstemp(
+            prefix="openstack", suffix=".setup")
 
     def test_parse_dependency_normal(self):
         with open(self.tmp_file, "w") as fh:
             fh.write("http://test.com\n")
-        self.assertEqual(
-            ["http://test.com"],
-            packaging.parse_dependency_links([self.tmp_file]))
+        self.assertEqual(["http://test.com"],
+                         packaging.parse_dependency_links([self.tmp_file]))
 
     def test_parse_dependency_with_git_egg_url(self):
         with open(self.tmp_file, "w") as fh:
             fh.write("-e git://foo.com/zipball#egg=bar")
-        self.assertEqual(
-            ["git://foo.com/zipball#egg=bar"],
-            packaging.parse_dependency_links([self.tmp_file]))
+        self.assertEqual(["git://foo.com/zipball#egg=bar"],
+                         packaging.parse_dependency_links([self.tmp_file]))
 
 
 class TestVersions(base.BaseTestCase):
@@ -657,7 +654,10 @@ class TestVersions(base.BaseTestCase):
             with mock.patch('email.message_from_file') as message_from_file:
                 message_from_file.side_effect = [
                     email.errors.MessageError('Test'),
-                    {'Name': 'pbr_testpackage'}]
+                    {
+                        'Name': 'pbr_testpackage'
+                    }
+                ]
                 version = packaging._get_version_from_pkg_metadata(
                     'pbr_testpackage')
 
@@ -748,8 +748,8 @@ class TestVersions(base.BaseTestCase):
         self.repo.commit()
         # Note that we can't target 1.2.3 anymore - with 1.2.3 released we
         # need to be working on 1.2.4.
-        err = self.assertRaises(
-            ValueError, packaging._get_version_from_git, '1.2.3')
+        err = self.assertRaises(ValueError, packaging._get_version_from_git,
+                                '1.2.3')
         self.assertThat(err.args[0], matchers.StartsWith('git history'))
 
     def test_preversion_too_low_semver_headers(self):
@@ -760,8 +760,8 @@ class TestVersions(base.BaseTestCase):
         self.repo.commit('sem-ver: feature')
         # Note that we can't target 1.2.4, the feature header means we need
         # to be working on 1.3.0 or above.
-        err = self.assertRaises(
-            ValueError, packaging._get_version_from_git, '1.2.4')
+        err = self.assertRaises(ValueError, packaging._get_version_from_git,
+                                '1.2.4')
         self.assertThat(err.args[0], matchers.StartsWith('git history'))
 
     def test_get_kwargs_corner_cases(self):
@@ -784,6 +784,7 @@ class TestVersions(base.BaseTestCase):
             self.assertEqual(dict(major=True), get_kwargs(tag))
             self.repo.commit('sem-ver: deprecation')
             self.assertEqual(dict(major=True, minor=True), get_kwargs(tag))
+
         _check_combinations('')
         self.repo.tag('1.2.3')
         _check_combinations('1.2.3')
@@ -854,19 +855,19 @@ class TestVersions(base.BaseTestCase):
 
 
 class TestRequirementParsing(base.BaseTestCase):
-
     def test_requirement_parsing(self):
         pkgs = {
-            'test_reqparse':
-                {
-                    'requirements.txt': textwrap.dedent("""\
+            'test_reqparse': {
+                'requirements.txt':
+                textwrap.dedent("""\
                         bar
                         quux<1.0; python_version=='2.6'
                         requests-aws>=0.1.4    # BSD License (3 clause)
                         Routes>=1.12.3,!=2.0,!=2.1;python_version=='2.7'
                         requests-kerberos>=0.6;python_version=='2.7' # MIT
                     """),
-                    'setup.cfg': textwrap.dedent("""\
+                'setup.cfg':
+                textwrap.dedent("""\
                         [metadata]
                         name = test_reqparse
 
@@ -875,7 +876,8 @@ class TestRequirementParsing(base.BaseTestCase):
                             foo
                             baz>3.2 :python_version=='2.7' # MIT
                             bar>3.3 :python_version=='2.7' # MIT # Apache
-                    """)},
+                    """)
+            },
         }
         pkg_dirs = self.useFixture(CreatePackages(pkgs)).package_dirs
         pkg_dir = pkg_dirs['test_reqparse']
@@ -884,8 +886,8 @@ class TestRequirementParsing(base.BaseTestCase):
         expected_requirements = {
             None: ['bar', 'requests-aws>=0.1.4'],
             ":(python_version=='2.6')": ['quux<1.0'],
-            ":(python_version=='2.7')": ['Routes!=2.0,!=2.1,>=1.12.3',
-                                         'requests-kerberos>=0.6'],
+            ":(python_version=='2.7')":
+            ['Routes!=2.0,!=2.1,>=1.12.3', 'requests-kerberos>=0.6'],
             'test': ['foo'],
             "test:(python_version=='2.7')": ['baz>3.2', 'bar>3.3']
         }
@@ -894,8 +896,10 @@ class TestRequirementParsing(base.BaseTestCase):
         # Two things are tested by this
         # 1) pbr properly parses markers from requiremnts.txt and setup.cfg
         # 2) bdist_wheel causes pbr to not evaluate markers
-        self._run_cmd(bin_python, ('setup.py', 'bdist_wheel'),
-                      allow_fail=False, cwd=pkg_dir)
+        self._run_cmd(
+            bin_python, ('setup.py', 'bdist_wheel'),
+            allow_fail=False,
+            cwd=pkg_dir)
         egg_info = os.path.join(pkg_dir, 'test_reqparse.egg-info')
 
         requires_txt = os.path.join(egg_info, 'requires.txt')
@@ -908,10 +912,7 @@ class TestRequirementParsing(base.BaseTestCase):
         # consistent across versions of setuptools.
 
         for section, expected in expected_requirements.items():
-            exp_parsed = [
-                pkg_resources.Requirement.parse(s)
-                for s in expected
-            ]
+            exp_parsed = [pkg_resources.Requirement.parse(s) for s in expected]
             gen_parsed = [
                 pkg_resources.Requirement.parse(s)
                 for s in generated_requirements[section]

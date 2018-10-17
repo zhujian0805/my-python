@@ -47,6 +47,7 @@ class C(object):
     def print_x(self):
         print self.x
 
+
 # Usage:
 print "Starting object creation"
 c = C("Test")

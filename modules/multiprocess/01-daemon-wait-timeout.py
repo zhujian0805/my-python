@@ -3,14 +3,17 @@ import multiprocessing
 import time
 import sys
 
+
 def daemon():
     print 'Starting:', multiprocessing.current_process().name
     time.sleep(2)
     print 'Exiting :', multiprocessing.current_process().name
 
+
 def non_daemon():
     print 'Starting:', multiprocessing.current_process().name
     print 'Exiting :', multiprocessing.current_process().name
+
 
 if __name__ == '__main__':
     d = multiprocessing.Process(name='daemon', target=daemon)

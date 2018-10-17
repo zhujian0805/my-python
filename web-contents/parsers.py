@@ -20,8 +20,8 @@ class AppsXML:
     """
 
     def __init__(self):
-        self._tree = ET.parse(os.path.join(
-            Config.get("config"), Config.get("apps_xml")))
+        self._tree = ET.parse(
+            os.path.join(Config.get("config"), Config.get("apps_xml")))
         self.root = self._tree.getroot()
         self.changed_region = None
         if self.root.tag != "apps":
@@ -66,7 +66,7 @@ class AppsXML:
                     self.root = region
                     return True
 
-        # in case we are calling this but 
+        # in case we are calling this but
         # we already set the region (the same region)
         if self.changed_region is not None:
             found = True
@@ -115,8 +115,8 @@ class BuildXML:
     """
 
     def __init__(self):
-        self._tree = ET.parse(os.path.join(
-            Config.get("config"), Config.get("build_xml")))
+        self._tree = ET.parse(
+            os.path.join(Config.get("config"), Config.get("build_xml")))
         self.root = self._tree.getroot()
         self.changed_region = None
 
@@ -153,7 +153,7 @@ class BuildXML:
                     self.root = region
                     return True
 
-        # in case we are calling this but 
+        # in case we are calling this but
         # we already set the region (the same region)
         if self.changed_region is not None:
             found = True

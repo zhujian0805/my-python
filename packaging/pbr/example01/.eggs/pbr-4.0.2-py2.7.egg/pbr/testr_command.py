@@ -25,7 +25,6 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
 # license you chose for the specific language governing permissions and
 # limitations under that license.
-
 """setuptools/distutils command to run testr via setup.py
 
 PBR will hook in the Testr class to provide "setup.py test" when
@@ -60,8 +59,8 @@ class TestrReal(cmd.Command):
         ('testr-args=', 't', "Run 'testr' with these args"),
         ('omit=', 'o', "Files to omit from coverage calculations"),
         ('coverage-package-name=', None, "Use this name to select packages "
-                                         "for coverage (one or more, "
-                                         "comma-separated)"),
+         "for coverage (one or more, "
+         "comma-separated)"),
         ('slowest', None, "Show slowest test times after tests complete."),
         ('no-parallel', None, "Run testr serially"),
         ('log-level=', 'l', "Log level (default: info)"),
@@ -71,8 +70,8 @@ class TestrReal(cmd.Command):
 
     def _run_testr(self, *args):
         logger.debug("_run_testr called with args = %r", args)
-        return commands.run_argv([sys.argv[0]] + list(args),
-                                 sys.stdin, sys.stdout, sys.stderr)
+        return commands.run_argv([sys.argv[0]] + list(args), sys.stdin,
+                                 sys.stdout, sys.stderr)
 
     def initialize_options(self):
         self.testr_args = None
@@ -84,10 +83,7 @@ class TestrReal(cmd.Command):
         self.log_level = 'info'
 
     def finalize_options(self):
-        self.log_level = getattr(
-            logging,
-            self.log_level.upper(),
-            logging.INFO)
+        self.log_level = getattr(logging, self.log_level.upper(), logging.INFO)
         logging.basicConfig(level=self.log_level)
         logger.debug("finalize_options called")
         if self.testr_args is None:
@@ -102,9 +98,10 @@ class TestrReal(cmd.Command):
         """Set up testr repo, then run testr."""
         logger.debug("run called")
 
-        warnings.warn('testr integration in pbr is deprecated. Please use '
-                      'the \'testr\' setup command or call testr directly',
-                      DeprecationWarning)
+        warnings.warn(
+            'testr integration in pbr is deprecated. Please use '
+            'the \'testr\' setup command or call testr directly',
+            DeprecationWarning)
 
         if not os.path.isdir(".testrepository"):
             self._run_testr("init")

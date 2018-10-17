@@ -6,10 +6,10 @@ PID = os.fork()
 CHILDREN = []
 
 if PID != 0:
-  CHILDREN.append(PID)
+    CHILDREN.append(PID)
 else:
-  time.sleep(5)
-  sys.exit(0)
+    time.sleep(5)
+    sys.exit(0)
 
 (PID, STATUS) = os.waitpid(PID, 0)
 

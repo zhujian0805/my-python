@@ -9,7 +9,7 @@ use template files).  The advantage of this style is that the entire
 app is one file, and it's easier to follow what is going on.
 """
 
-from collections import OrderedDict  # Requires Python 2.7.
+from collections import OrderedDict    # Requires Python 2.7.
 from threading import Lock
 from weakref import WeakValueDictionary
 
@@ -31,15 +31,16 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('TASKS_SETTINGS', silent=True)
 
-
 # Application routes and helper.
+
 
 @app.route('/')
 def home():
     with get_access_token_lock():
         datastore = open_datastore(refresh=True)
         if not datastore:
-            return '<a href="%s">Link to Dropbox</a>' % url_for('dropbox_auth_start')
+            return '<a href="%s">Link to Dropbox</a>' % url_for(
+                'dropbox_auth_start')
         return render_template_string(
             '''
             <h1>My Tasks</h1>
@@ -64,8 +65,9 @@ def home():
             </form>
             <a href="{{ url_for('dropbox_logout') }}">Log out</a>
             ''',
-            tasks=sorted(datastore.get_table('tasks').query(),
-                         key=lambda record: record.get('created')))
+            tasks=sorted(
+                datastore.get_table('tasks').query(),
+                key=lambda record: record.get('created')))
 
 
 @app.route('/add', methods=['POST'])
@@ -76,8 +78,11 @@ def add():
             datastore = open_datastore()
             if datastore:
                 table = datastore.get_table('tasks')
+
                 def txn():
-                    table.insert(completed=False, taskname=taskname, created=Date())
+                    table.insert(
+                        completed=False, taskname=taskname, created=Date())
+
                 try:
                     datastore.transaction(txn, max_tries=4)
                 except DatastoreError:
@@ -93,10 +98,12 @@ def delete():
             datastore = open_datastore()
             if datastore:
                 table = datastore.get_table('tasks')
+
                 def txn():
                     record = table.get(id)
                     if record:
                         record.delete_record()
+
                 try:
                     datastore.transaction(txn, max_tries=4)
                 except DatastoreError:
@@ -121,10 +128,12 @@ def change_completed(completed):
             datastore = open_datastore()
             if datastore:
                 table = datastore.get_table('tasks')
+
                 def txn():
                     record = table.get(id)
                     if record:
                         record.update(completed=completed)
+
                 try:
                     datastore.transaction(txn, max_tries=4)
                 except DatastoreError:
@@ -136,10 +145,11 @@ def change_completed(completed):
 locks = WeakValueDictionary()
 meta_lock = Lock()
 
+
 def get_access_token_lock():
     access_token = session.get('access_token')
     if not access_token:
-        return Lock()  # Dummy lock.
+        return Lock()    # Dummy lock.
     with meta_lock:
         lock = locks.get(access_token)
         if lock is None:
@@ -149,6 +159,7 @@ def get_access_token_lock():
 
 # LRU cache used by open_datastore.
 cache = OrderedDict()
+
 
 def open_datastore(refresh=False):
     access_token = session.get('access_token')
@@ -177,6 +188,7 @@ def open_datastore(refresh=False):
 
 
 # Dropbox auth routes and helper.  Same as ../flask_app/.
+
 
 @app.route('/dropbox-auth-finish')
 def dropbox_auth_finish():
@@ -212,10 +224,11 @@ def dropbox_logout():
 def get_auth_flow():
     redirect_uri = url_for('dropbox_auth_finish', _external=True)
     return DropboxOAuth2Flow(DROPBOX_APP_KEY, DROPBOX_APP_SECRET, redirect_uri,
-                                       session, 'dropbox-auth-csrf-token')
+                             session, 'dropbox-auth-csrf-token')
 
 
 # Main boilerplate.
+
 
 def main():
     app.run(threaded=True)

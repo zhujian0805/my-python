@@ -105,8 +105,7 @@ class TestCore(base.BaseTestCase):
         stdout, _, return_code = self.run_setup(
             'install_scripts', '--install-dir=%s' % self.temp_dir)
 
-        self.useFixture(
-            fixtures.EnvironmentVariable('PYTHONPATH', '.'))
+        self.useFixture(fixtures.EnvironmentVariable('PYTHONPATH', '.'))
 
         self.check_script_install(stdout)
 
@@ -117,8 +116,7 @@ class TestCore(base.BaseTestCase):
             self.skipTest('Windows support is passthrough')
 
         self.useFixture(
-            fixtures.EnvironmentVariable(
-                'PYTHONPATH', ".:%s" % self.temp_dir))
+            fixtures.EnvironmentVariable('PYTHONPATH', ".:%s" % self.temp_dir))
 
         stdout, _, return_code = self.run_setup(
             'develop', '--install-dir=%s' % self.temp_dir)
@@ -127,11 +125,10 @@ class TestCore(base.BaseTestCase):
 
 
 class TestGitSDist(base.BaseTestCase):
-
     def setUp(self):
         super(TestGitSDist, self).setUp()
 
-        stdout, _, return_code = self._run_cmd('git', ('init',))
+        stdout, _, return_code = self._run_cmd('git', ('init', ))
         if return_code:
             self.skipTest("git not installed")
 

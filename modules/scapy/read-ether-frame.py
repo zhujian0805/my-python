@@ -3,10 +3,10 @@ import socket
 from scapy.all import ETH_P_ALL
 from scapy.all import MTU
 
+
 # author: askldjd
 # see: http://wp.me/pDfjR-rQ
 class IPSniff:
-
     def __init__(self, interface_name, on_ip_incoming, on_ip_outgoing):
 
         self.interface_name = interface_name
@@ -15,8 +15,8 @@ class IPSniff:
 
         # The raw in (listen) socket is a L2 raw socket that listens
         # for all packets going through a specific interface.
-        self.ins = socket.socket(
-            socket.AF_PACKET, socket.SOCK_RAW, socket.htons(ETH_P_ALL))
+        self.ins = socket.socket(socket.AF_PACKET, socket.SOCK_RAW,
+                                 socket.htons(ETH_P_ALL))
         self.ins.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 2**30)
         self.ins.bind((self.interface_name, ETH_P_ALL))
 
@@ -57,7 +57,7 @@ class IPSniff:
 
             dummy_eth_protocol = socket.ntohs(eth_header[2])
 
-            if eth_header[2] != 0x800 :
+            if eth_header[2] != 0x800:
                 continue
 
             ip_header = pkt[14:34]
@@ -65,14 +65,19 @@ class IPSniff:
 
             self.__process_ipframe(sa_ll[2], ip_header, payload)
 
+
 # Example code to use IPSniff
 def test_incoming_callback(src, dst, frame):
-    print("incoming - src=%s, dst=%s, frame len = %d" %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
+    print("incoming - src=%s, dst=%s, frame len = %d" %
+          (socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
     pass
 
+
 def test_outgoing_callback(src, dst, frame):
-    print("outgoing - src=%s, dst=%s, frame len = %d" %(socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
+    print("outgoing - src=%s, dst=%s, frame len = %d" %
+          (socket.inet_ntoa(src), socket.inet_ntoa(dst), len(frame)))
     pass
+
 
 ip_sniff = IPSniff('enp1s0', test_incoming_callback, test_outgoing_callback)
 ip_sniff.recv()

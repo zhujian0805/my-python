@@ -17,7 +17,7 @@ class Tester(object):
 
     def say(self, tag):
         def decorator(f):
-            @functools.wraps(f)  #Functools to the rescue
+            @functools.wraps(f)    #Functools to the rescue
             def wrapper(*args, **kwargs):
                 print "Hello %s" % tag
                 f(args[0])

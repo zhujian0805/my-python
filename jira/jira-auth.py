@@ -2,8 +2,8 @@
 
 from jira.client import JIRA
 
-options = { 'server': 'https://jira.atlassian.com' }
+options = {'server': 'https://jira.atlassian.com'}
 server = "https://jira.sample.net"
-credentials = ( 'jameszhu', '%t6y7u8i' )
+credentials = ('jameszhu', '%t6y7u8i')
 
-jiraclient = JIRA(basic_auth=credentials, server = server, options = options)
+jiraclient = JIRA(basic_auth=credentials, server=server, options=options)

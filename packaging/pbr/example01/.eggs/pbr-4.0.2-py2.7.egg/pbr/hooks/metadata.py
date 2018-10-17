@@ -24,9 +24,8 @@ class MetadataConfig(base.BaseConfig):
     def hook(self):
         self.config['version'] = packaging.get_version(
             self.config['name'], self.config.get('version', None))
-        packaging.append_text_list(
-            self.config, 'requires_dist',
-            packaging.parse_requirements())
+        packaging.append_text_list(self.config, 'requires_dist',
+                                   packaging.parse_requirements())
 
     def get_name(self):
         return self.config['name']

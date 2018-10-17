@@ -11,14 +11,17 @@ client_secret = 'Aa7xzrPFslfjwjmCjaza8ezvJwgAuz6PJca'
 authorization_base_url = 'https://www.battlenet.com.cn/oauth/authorize'
 token_url = 'https://www.battlenet.com.cn/oauth/token'
 
-battlenet = OAuth2Session(client_id,redirect_uri='https://localhost/callback')
+battlenet = OAuth2Session(client_id, redirect_uri='https://localhost/callback')
 authorization_url, state = battlenet.authorization_url(authorization_base_url)
 
 print 'Please go here and authorize,', authorization_url
 
 redirect_response = raw_input('Paste the full redirect URL here:')
 
-battlenet.fetch_token(token_url, client_secret=client_secret, authorization_response=redirect_response)
+battlenet.fetch_token(
+    token_url,
+    client_secret=client_secret,
+    authorization_response=redirect_response)
 
 r = battlenet.get('https://api.battlenet.com.cn/account/user')
 

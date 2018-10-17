@@ -9,6 +9,7 @@ class Province:
     def func(self, *args, **kwargs):
         print 'func'
 
+
 print Province.__dict__
 obj1 = Province('HeBei', 10000)
 print obj1.__dict__

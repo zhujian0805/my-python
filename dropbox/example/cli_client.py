@@ -14,8 +14,10 @@ from dropbox import client, rest, session
 APP_KEY = sys.argv[1]
 APP_SECRET = sys.argv[2]
 
+
 def command(login_required=True):
     """a decorator for handling authentication and exceptions"""
+
     def decorate(f):
         def wrapper(self, args):
             if login_required and self.api_client is None:
@@ -32,7 +34,9 @@ def command(login_required=True):
 
         wrapper.__doc__ = f.__doc__
         return wrapper
+
     return decorate
+
 
 class DropboxTerm(cmd.Cmd):
     TOKEN_FILE = "token_store.txt"
@@ -48,7 +52,9 @@ class DropboxTerm(cmd.Cmd):
         try:
             serialized_token = open(self.TOKEN_FILE).read()
             if serialized_token.startswith('oauth1:'):
-                access_key, access_secret = serialized_token[len('oauth1:'):].split(':', 1)
+                access_key, access_secret = serialized_token[len('oauth1:'
+                                                                 ):].split(
+                                                                     ':', 1)
                 sess = session.DropboxSession(self.app_key, self.app_secret)
                 sess.set_token(access_key, access_secret)
                 self.api_client = client.DropboxClient(sess)
@@ -58,9 +64,9 @@ class DropboxTerm(cmd.Cmd):
                 self.api_client = client.DropboxClient(access_token)
                 print "[loaded OAuth 2 access token]"
             else:
-                print "Malformed access token in %r." % (self.TOKEN_FILE,)
+                print "Malformed access token in %r." % (self.TOKEN_FILE, )
         except IOError:
-            pass # don't worry if it's not there
+            pass    # don't worry if it's not there
 
     @command()
     def do_ls(self):
@@ -84,10 +90,12 @@ class DropboxTerm(cmd.Cmd):
     @command(login_required=False)
     def do_login(self):
         """log in to a Dropbox account"""
-        flow = client.DropboxOAuth2FlowNoRedirect(self.app_key, self.app_secret)
+        flow = client.DropboxOAuth2FlowNoRedirect(self.app_key,
+                                                  self.app_secret)
         authorize_url = flow.start()
         sys.stdout.write("1. Go to: " + authorize_url + "\n")
-        sys.stdout.write("2. Click \"Allow\" (you might have to log in first).\n")
+        sys.stdout.write(
+            "2. Click \"Allow\" (you might have to log in first).\n")
         sys.stdout.write("3. Copy the authorization code.\n")
         code = raw_input("Enter the authorization code here: ").strip()
 
@@ -108,7 +116,8 @@ class DropboxTerm(cmd.Cmd):
         request_token = sess.obtain_request_token()
         authorize_url = sess.build_authorize_url(request_token)
         sys.stdout.write("1. Go to: " + authorize_url + "\n")
-        sys.stdout.write("2. Click \"Allow\" (you might have to log in first).\n")
+        sys.stdout.write(
+            "2. Click \"Allow\" (you might have to log in first).\n")
         sys.stdout.write("3. Press ENTER.\n")
         raw_input()
 
@@ -132,7 +141,8 @@ class DropboxTerm(cmd.Cmd):
     @command()
     def do_cat(self, path):
         """display the contents of a file"""
-        f, metadata = self.api_client.get_file_and_metadata(self.current_path + "/" + path)
+        f, metadata = self.api_client.get_file_and_metadata(self.current_path +
+                                                            "/" + path)
         self.stdout.write(f.read())
         self.stdout.write("\n")
 
@@ -177,7 +187,8 @@ class DropboxTerm(cmd.Cmd):
         """
         to_file = open(os.path.expanduser(to_path), "wb")
 
-        f, metadata = self.api_client.get_file_and_metadata(self.current_path + "/" + from_path)
+        f, metadata = self.api_client.get_file_and_metadata(self.current_path +
+                                                            "/" + from_path)
         print 'Metadata:', metadata
         to_file.write(f.read())
 
@@ -193,7 +204,7 @@ class DropboxTerm(cmd.Cmd):
         to_file = open(os.path.expanduser(to_path), "wb")
 
         f, metadata = self.api_client.thumbnail_and_metadata(
-                self.current_path + "/" + from_path, size, format)
+            self.current_path + "/" + from_path, size, format)
         print 'Metadata:', metadata
         to_file.write(f.read())
 
@@ -252,6 +263,7 @@ def main():
         exit("You need to set your APP_KEY and APP_SECRET!")
     term = DropboxTerm(APP_KEY, APP_SECRET)
     term.cmdloop()
+
 
 if __name__ == '__main__':
     main()

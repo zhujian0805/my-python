@@ -25,6 +25,7 @@ import sys
 
 class FuckYou(object):
     """ Pylint """
+
     def __init__(self):
         """ pylint """
         self.fuck = "YES"

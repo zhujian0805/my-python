@@ -1,12 +1,12 @@
 #!/usr/bin/python
 import asyncore, socket
 
-class HTTPClient(asyncore.dispatcher):
 
+class HTTPClient(asyncore.dispatcher):
     def __init__(self, host, path):
         asyncore.dispatcher.__init__(self)
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.connect( (host, 8080) )
+        self.connect((host, 8080))
         self.buffer = 'sending this message'
 
     def handle_connect(self):

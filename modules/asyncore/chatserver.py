@@ -6,6 +6,7 @@ import logging
 from pprint import pprint
 import re
 
+
 class EchoHandler(asyncore.dispatcher_with_send):
 
     helpstr = """
@@ -16,6 +17,7 @@ chat        start to chat with everyone
 bye         quit the chat
 help|?      print this help
 """
+
     def __init__(self, sock):
         asyncore.dispatcher_with_send.__init__(self, sock)
         self.logger = logging.getLogger("EchoHandler")
@@ -42,10 +44,12 @@ help|?      print this help
             self.broadcast(data)
 
     def handle_error(self):
-        self.logger.debug("Error, %s:%s is omitting error" % ((str(self.addr[0])), str(self.addr[1])))
+        self.logger.debug("Error, %s:%s is omitting error" % (
+            (str(self.addr[0])), str(self.addr[1])))
 
     def handle_close(self):
-        self.logger.debug("Hello, %s:%s is closing" % ((str(self.addr[0])), str(self.addr[1])))
+        self.logger.debug("Hello, %s:%s is closing" % (
+            (str(self.addr[0])), str(self.addr[1])))
         ###remove the closed socket from users
         closed = None
         the_key = str(self.addr[0]) + "." + str(self.addr[1])
@@ -55,34 +59,37 @@ help|?      print this help
 
         if closed:
             users.remove(closed)
-            self.logger.debug("removing socket %s from socket set" % str(closed))
+            self.logger.debug(
+                "removing socket %s from socket set" % str(closed))
 
         self.close()
 
     def create_file(self, fn):
         path = "/tmp/"
-        fn  = path + fn
+        fn = path + fn
         fo = open(fn, 'w')
         fo.close()
 
-    def broadcast(self,data):
+    def broadcast(self, data):
         my_key = str(self.addr[0]) + "." + str(self.addr[1])
         myname = my_key
         for user in users:
             if user.has_key(my_key):
                 if user[my_key].has_key('name'):
                     myname = user[my_key]['name']
-             
+
         self.logger.debug("broadcast: %s %s" % (my_key, myname))
 
         try:
             for user in users:
-                self.logger.debug("my_key:" + my_key )
+                self.logger.debug("my_key:" + my_key)
                 if user.has_key(my_key):
                     self.logger.debug("sending to myself!!!")
                     if user[my_key].has_key('name'):
-                        user[my_key]['sock'].send("\n" + user[my_key]['name'] + " said> " + data)
-                        user[my_key]['sock'].send(user[my_key]['name'] + " said> ")
+                        user[my_key]['sock'].send("\n" + user[my_key]['name'] +
+                                                  " said> " + data)
+                        user[my_key]['sock'].send(user[my_key]['name'] +
+                                                  " said> ")
                         myname = user[my_key]['name']
                         self.logger.debug("my self name is :::: %s" % myname)
                     else:
@@ -91,15 +98,15 @@ help|?      print this help
                     self.logger.debug("sending to others!!!")
                     others_key = user.keys()[0]
                     #self.logger.debug("others_key:" + others_key)
-                    user[others_key]['sock'].send( "\n" + myname + " said> " + data)
+                    user[others_key]['sock'].send("\n" + myname + " said> " +
+                                                  data)
 
                     if user[others_key].has_key('name'):
-                        user[others_key]['sock'].send(user[others_key]['name'] + " said> ")
+                        user[others_key]['sock'].send(
+                            user[others_key]['name'] + " said> ")
                     else:
                         user[others_key]['sock'].send("You said> ")
 
-
-                    
         except Exception as ex:
             # in python 2.4/2.5, you should use the syntax as below line, chaning the "as"
             # to ","
@@ -111,7 +118,6 @@ help|?      print this help
 
 
 class EchoServer(asyncore.dispatcher):
-
     def __init__(self, host, port):
         self.logger = logging.getLogger("EchoServer")
         self.logger.debug("Starting server")
@@ -137,9 +143,13 @@ class EchoServer(asyncore.dispatcher):
             self.logger.debug('Incoming connection from %s' % repr(addr))
             handler = EchoHandler(sock)
 
+
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.DEBUG, format='%(name)s: %(message)s',)
-    logger = logging.getLogger(sys.argv[0]+__name__)
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(name)s: %(message)s',
+    )
+    logger = logging.getLogger(sys.argv[0] + __name__)
     users = []
     server = EchoServer('0.0.0.0', 8080)
     asyncore.loop()

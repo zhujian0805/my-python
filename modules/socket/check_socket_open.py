@@ -17,15 +17,27 @@ def check_server(address, port):
         print "Connection to %s on port %s failed: %s" % (address, port, e)
         return False
 
+
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
 
-    parser.add_option("-a", "--address", dest="address",
-                      default='localhost', help="ADDRESS for server", metavar="ADDRESS")
+    parser.add_option(
+        "-a",
+        "--address",
+        dest="address",
+        default='localhost',
+        help="ADDRESS for server",
+        metavar="ADDRESS")
 
-    parser.add_option("-p", "--port", dest="port", type="int",
-                      default=80, help="PORT for server", metavar="PORT")
+    parser.add_option(
+        "-p",
+        "--port",
+        dest="port",
+        type="int",
+        default=80,
+        help="PORT for server",
+        metavar="PORT")
 
     (options, args) = parser.parse_args()
     print 'options: %s, args: %s' % (options, args)

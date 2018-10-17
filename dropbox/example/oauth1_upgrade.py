@@ -8,14 +8,19 @@ from dropbox import client, rest, session
 APP_KEY = ''
 APP_SECRET = ''
 
+
 def main():
     if APP_KEY == '' or APP_SECRET == '':
-        sys.stderr.write("ERROR: Set your APP_KEY and APP_SECRET at the top of %r.\n" % __file__)
+        sys.stderr.write(
+            "ERROR: Set your APP_KEY and APP_SECRET at the top of %r.\n" %
+            __file__)
         sys.exit(1)
 
     prog_name, args = sys.argv[0], sys.argv[1:]
     if len(args) != 2:
-        sys.stderr.write("Usage: %s <oauth1-access-token-key> <oauth1-access-token-secret>\n")
+        sys.stderr.write(
+            "Usage: %s <oauth1-access-token-key> <oauth1-access-token-secret>\n"
+        )
         sys.exit(1)
 
     access_token_key, access_token_secret = args
@@ -33,6 +38,7 @@ def main():
 
     sys.stdout.write("Disabling OAuth 1 access token...\n")
     c.disable_access_token()
+
 
 if __name__ == '__main__':
     main()

@@ -64,9 +64,7 @@ htmlhelp_basename = '%sdoc' % project
 # (source start file, target name, title, author, documentclass
 # [howto/manual]).
 latex_documents = [
-    ('index',
-     '%s.tex' % project,
-     u'%s Documentation' % project,
+    ('index', '%s.tex' % project, u'%s Documentation' % project,
      u'OpenStack Foundation', 'manual'),
 ]
 

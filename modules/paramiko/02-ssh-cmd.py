@@ -11,10 +11,12 @@ client = paramiko.client.SSHClient()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 try:
     #client.connect(sys.argv[1], port=22, username='username', password='passwd')
-    client.connect(sys.argv[1], port=22, username='jameszhu', password='VFR$bgt5nhy6')
+    client.connect(
+        sys.argv[1], port=22, username='jameszhu', password='VFR$bgt5nhy6')
 except:
     try:
-        client.connect(sys.argv[1], port=22, username='username', password='passwd')
+        client.connect(
+            sys.argv[1], port=22, username='username', password='passwd')
     except:
         print "something wrong while connecting to %s!" % "AMM"
         sys.exit(5)

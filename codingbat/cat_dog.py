@@ -1,10 +1,11 @@
 #!/usr/bin/python
 
+
 def cat_dog(str):
     cat = 0
     dog = 0
-    for i in xrange(0,len(str)-2):
-        s = str[i:i+3]
+    for i in xrange(0, len(str) - 2):
+        s = str[i:i + 3]
         if s == 'cat':
             cat = cat + 1
         if s == 'dog':
@@ -13,5 +14,6 @@ def cat_dog(str):
         return True
     else:
         return False
+
 
 print cat_dog("catdo")

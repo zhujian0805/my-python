@@ -11,7 +11,7 @@ http://thecodeship.com/patterns/guide-to-python-function-decorators/
 
 def target():
     def decorator(f):
-        @wraps(f)  #Functools to the rescue
+        @wraps(f)    #Functools to the rescue
         def wrapper(*args, **kwargs):
             print args[0] + " " + kwargs['name']
 
@@ -23,6 +23,8 @@ def target():
 @target()
 def prtsomething(something, name="James Zhu"):
     """returns some text"""
+
+
 #    pass
 
 prtsomething("I L U", name="Yili")

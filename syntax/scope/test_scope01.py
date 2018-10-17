@@ -21,6 +21,7 @@
 
 foo = 'MODULE level string'
 
+
 def aaa():
     foo = "first level in FUNC aaaa"
     print(foo)
@@ -34,5 +35,6 @@ def aaa():
 
     bbb()
     ccc()
+
 
 aaa()

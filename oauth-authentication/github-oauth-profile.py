@@ -9,7 +9,6 @@ from pprint import pprint
 
 app = Flask(__name__)
 
-
 # This information is obtained upon registration of a new GitHub OAuth
 # application here: https://github.com/settings/applications/new
 client_id = "2607467a6ff2c2"
@@ -36,6 +35,7 @@ def demo():
 
 # Step 2: User authorization, this happens on the provider.
 
+
 @app.route("/callback", methods=["GET"])
 def callback():
     print '--------- callbacking ----------------'
@@ -47,13 +47,15 @@ def callback():
     """
 
     github = OAuth2Session(client_id, state=session['oauth_state'])
-    token = github.fetch_token(token_url, client_secret=client_secret,
-                               authorization_response=request.url)
+    token = github.fetch_token(
+        token_url,
+        client_secret=client_secret,
+        authorization_response=request.url)
 
     # At this point you can fetch protected resources but lets save
     # the token and show how this is done from a persisted token
     # in /profile.
-    print 'token is ---------' , token
+    print 'token is ---------', token
     session['oauth_token'] = token
     return redirect(url_for('profile'))
 
@@ -69,9 +71,10 @@ def profile():
     res = github.get('https://api.github.com/user/repos').json()
     ret = {}
     for r in res:
-      ret[r['name']] = r
+        ret[r['name']] = r
 
     return jsonify(ret)
+
 
 if __name__ == "__main__":
     # This allows us to use a plain HTTP callback

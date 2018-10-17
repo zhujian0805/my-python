@@ -25,9 +25,9 @@ from pbr import util
 
 class TestExtrasRequireParsingScenarios(base.BaseTestCase):
 
-    scenarios = [
-        ('simple_extras', {
-            'config_text': """
+    scenarios = [('simple_extras', {
+        'config_text':
+        """
                 [extras]
                 first =
                     foo
@@ -36,15 +36,16 @@ class TestExtrasRequireParsingScenarios(base.BaseTestCase):
                     baz>=3.2
                     foo
                 """,
-            'expected_extra_requires': {
-                'first': ['foo', 'bar==1.0'],
-                'second': ['baz>=3.2', 'foo'],
-                'test': ['requests-mock'],
-                "test:(python_version=='2.6')": ['ordereddict'],
-            }
-        }),
-        ('with_markers', {
-            'config_text': """
+        'expected_extra_requires': {
+            'first': ['foo', 'bar==1.0'],
+            'second': ['baz>=3.2', 'foo'],
+            'test': ['requests-mock'],
+            "test:(python_version=='2.6')": ['ordereddict'],
+        }
+    }),
+                 ('with_markers', {
+                     'config_text':
+                     """
                 [extras]
                 test =
                     foo:python_version=='2.6'
@@ -52,17 +53,19 @@ class TestExtrasRequireParsingScenarios(base.BaseTestCase):
                     baz<1.6 :python_version=='2.6'
                     zaz :python_version>'1.0'
                 """,
-            'expected_extra_requires': {
-                "test:(python_version=='2.6')": ['foo', 'baz<1.6'],
-                "test": ['bar', 'zaz']}}),
-        ('no_extras', {
-            'config_text': """
+                     'expected_extra_requires': {
+                         "test:(python_version=='2.6')": ['foo', 'baz<1.6'],
+                         "test": ['bar', 'zaz']
+                     }
+                 }),
+                 ('no_extras', {
+                     'config_text':
+                     """
             [metadata]
             long_description = foo
             """,
-            'expected_extra_requires':
-            {}
-        })]
+                     'expected_extra_requires': {}
+                 })]
 
     def config_from_ini(self, ini):
         config = {}
@@ -85,7 +88,6 @@ class TestExtrasRequireParsingScenarios(base.BaseTestCase):
 
 
 class TestInvalidMarkers(base.BaseTestCase):
-
     def test_invalid_marker_raises_error(self):
         config = {'extras': {'test': "foo :bad_marker>'1.0'"}}
         self.assertRaises(SyntaxError, util.setup_cfg_to_setup_kwargs, config)

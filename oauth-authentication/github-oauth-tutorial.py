@@ -21,8 +21,10 @@ print 'Please go here and authorize,', authorization_url
 redirect_response = raw_input('Paste the full redirect URL here:')
 
 # Fetch the access token
-github.fetch_token(token_url, client_secret=client_secret,
-        authorization_response=redirect_response)
+github.fetch_token(
+    token_url,
+    client_secret=client_secret,
+    authorization_response=redirect_response)
 
 # Fetch a protected resource, i.e. user profile
 r = github.get('https://api.github.com/user/repos')

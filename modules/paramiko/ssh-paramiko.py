@@ -10,7 +10,8 @@ def get_mac(ip, slot):
     paramiko.util.log_to_file('/tmp/' + sys.argv[0] + '.log')
     try:
         client.connect(ip, port=22, username='me', password='changeme')
-        stdin, stdout, stderr = client.exec_command('info -T system:blade[%s]'%slot)
+        stdin, stdout, stderr = client.exec_command(
+            'info -T system:blade[%s]' % slot)
         for line in stdout.readlines():
             if re.search(r'MAC Address 1', line):
                 cols = line.strip().split(':', 1)

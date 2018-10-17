@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 # make up some data
 x = [datetime.datetime.now() + datetime.timedelta(hours=i) for i in range(12)]
-y = [i+random.gauss(0,1) for i,_ in enumerate(x)]
+y = [i + random.gauss(0, 1) for i, _ in enumerate(x)]
 
 # plot
 plt.plot(xsynchronized)

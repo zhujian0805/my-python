@@ -4,8 +4,9 @@ from pprint import pprint
 
 sys.setrecursionlimit(1000000)
 
-longest = '';
-pals = {};
+longest = ''
+pals = {}
+
 
 def find_longest_palindrome(s):
     global longest
@@ -15,7 +16,7 @@ def find_longest_palindrome(s):
     if s == s[::-1]:
         if len(s) > len(longest):
             longest = s
-        if(pals.has_key(s)):
+        if (pals.has_key(s)):
             pals[s]['n'] = pals[s]['n'] + 1
             pals[s]['l'] = len(s)
         else:
@@ -23,8 +24,9 @@ def find_longest_palindrome(s):
             pals[s]['n'] = 1
             pals[s]['l'] = len(s)
     else:
-        find_longest_palindrome(s[:-1]);
-   
+        find_longest_palindrome(s[:-1])
+
+
 s = sys.argv[1]
 for i in xrange(len(s)):
     find_longest_palindrome(s[i:])

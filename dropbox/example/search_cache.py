@@ -28,12 +28,15 @@ APP_SECRET = ''
 
 STATE_FILE = 'search_cache.json'
 
+
 def main():
     # Lets us print unicode characters through sys.stdout/stderr
     reload(sys).setdefaultencoding('utf8')
 
     if APP_KEY == '' or APP_SECRET == '':
-        sys.stderr.write("ERROR: Set your APP_KEY and APP_SECRET at the top of %r.\n" % __file__)
+        sys.stderr.write(
+            "ERROR: Set your APP_KEY and APP_SECRET at the top of %r.\n" %
+            __file__)
         sys.exit(1)
 
     prog_name = sys.argv[0]
@@ -41,12 +44,21 @@ def main():
 
     if len(args) == 0:
         sys.stderr.write("Usage:\n")
-        sys.stderr.write("   %s link           Link to a user's account.\n" % prog_name)
-        sys.stderr.write("   %s update         Update cache to the latest on Dropbox.\n" % prog_name)
-        sys.stderr.write("   %s update <num>   Update cache, limit to <num> pages of /delta.\n" % prog_name)
-        sys.stderr.write("   %s find <term>    Search the cache for <term> (case-sensitive).\n" % prog_name)
-        sys.stderr.write("   %s find           Display entire cache.\n" % prog_name)
-        sys.stderr.write("   %s reset          Delete the cache.\n" % prog_name)
+        sys.stderr.write(
+            "   %s link           Link to a user's account.\n" % prog_name)
+        sys.stderr.write(
+            "   %s update         Update cache to the latest on Dropbox.\n" %
+            prog_name)
+        sys.stderr.write(
+            "   %s update <num>   Update cache, limit to <num> pages of /delta.\n"
+            % prog_name)
+        sys.stderr.write(
+            "   %s find <term>    Search the cache for <term> (case-sensitive).\n"
+            % prog_name)
+        sys.stderr.write(
+            "   %s find           Display entire cache.\n" % prog_name)
+        sys.stderr.write(
+            "   %s reset          Delete the cache.\n" % prog_name)
         sys.exit(0)
 
     command = args[0]
@@ -62,6 +74,7 @@ def main():
         sys.stderr.write("ERROR: Unknown command: %r\n" % command)
         sys.stderr.write("Run with no arguments for help.\n")
         sys.exit(1)
+
 
 def command_link(args):
     if len(args) != 1:
@@ -80,10 +93,8 @@ def command_link(args):
     access_token, user_id = auth_flow.finish(code)
     sys.stdout.write("Link successful.\n")
 
-    save_state({
-        'access_token': access_token,
-        'tree': {}
-    })
+    save_state({'access_token': access_token, 'tree': {}})
+
 
 def command_update(args):
     if len(args) == 1:
@@ -91,7 +102,8 @@ def command_update(args):
     elif len(args) == 2:
         page_limit = int(args[1])
     else:
-        sys.stderr.write("ERROR: \"update\" takes either zero or one argument.\n")
+        sys.stderr.write(
+            "ERROR: \"update\" takes either zero or one argument.\n")
         sys.exit(1)
 
     # Load state
@@ -129,21 +141,24 @@ def command_update(args):
         state['tree'] = tree
         save_state(state)
 
+
 def command_find(args):
     if len(args) == 1:
         term = ''
     elif len(args) == 2:
         term = args[1]
     else:
-        sys.stderr.write("ERROR: \"find\" takes either zero or one arguments.\n")
+        sys.stderr.write(
+            "ERROR: \"find\" takes either zero or one arguments.\n")
         sys.exit(1)
 
     state = load_state()
     results = []
     search_tree(results, state['tree'], term)
     for r in results:
-        sys.stdout.write("%s\n" % (r,))
-    sys.stdout.write("[Matches: %d]\n" % (len(results),))
+        sys.stdout.write("%s\n" % (r, ))
+    sys.stdout.write("[Matches: %d]\n" % (len(results), ))
+
 
 def command_reset(args):
     if len(args) != 1:
@@ -160,6 +175,7 @@ def command_reset(args):
 
 # We track the folder state as a tree of Node objects.
 
+
 class Node(object):
     def __init__(self, path, content):
         # The "original" path (i.e. not the lower-case path)
@@ -167,26 +183,34 @@ class Node(object):
         # For files, content is a pair (size, modified)
         # For folders, content is a dict of children Nodes, keyed by lower-case file names.
         self.content = content
+
     def is_folder(self):
         return isinstance(self.content, dict)
+
     def to_json(self):
         return (self.path, Node.to_json_content(self.content))
+
     @staticmethod
     def from_json(jnode):
         path, jcontent = jnode
         return Node(path, Node.from_json_content(jcontent))
+
     @staticmethod
     def to_json_content(content):
         if isinstance(content, dict):
-            return dict([(name_lc, node.to_json()) for name_lc, node in content.iteritems()])
+            return dict([(name_lc, node.to_json())
+                         for name_lc, node in content.iteritems()])
         else:
             return content
+
     @staticmethod
     def from_json_content(jcontent):
         if isinstance(jcontent, dict):
-            return dict([(name_lc, Node.from_json(jnode)) for name_lc, jnode in jcontent.iteritems()])
+            return dict([(name_lc, Node.from_json(jnode))
+                         for name_lc, jnode in jcontent.iteritems()])
         else:
             return jcontent
+
 
 def apply_delta(root, e):
     path, metadata = e
@@ -206,7 +230,7 @@ def apply_delta(root, e):
 
         # Create the file/folder.
         node = get_or_create_child(children, leaf)
-        node.path = metadata['path']  # Save the un-lower-cased path.
+        node.path = metadata['path']    # Save the un-lower-cased path.
         if metadata['is_dir']:
             # Only create an empty folder if there isn't one there already.
             if not node.is_folder():
@@ -228,17 +252,20 @@ def apply_delta(root, e):
             if leaf in children:
                 del children[leaf]
 
+
 def get_or_create_child(children, name):
     child = children.get(name)
     if child is None:
         children[name] = child = Node(None, None)
     return child
 
+
 def split_path(path):
     assert path[0] == '/', path
     assert path != '/', path
     parts = path[1:].split('/')
     return parts[0:-1], parts[-1]
+
 
 # Recursively search 'tree' for files that contain the string in 'term'.
 # Print out any matches.
@@ -247,7 +274,7 @@ def search_tree(results, tree, term):
         path = node.path
         if (path is not None) and term in path:
             if node.is_folder():
-                results.append('%s' % (path,))
+                results.append('%s' % (path, ))
             else:
                 size, modified = node.content
                 results.append('%s  (%s, %s)' % (path, size, modified))
@@ -255,9 +282,12 @@ def search_tree(results, tree, term):
         if node.is_folder():
             search_tree(results, node.content, term)
 
+
 def load_state():
     if not os.path.exists(STATE_FILE):
-        sys.stderr.write("ERROR: Couldn't find state file %r.  Run the \"link\" subcommand first.\n" % (STATE_FILE))
+        sys.stderr.write(
+            "ERROR: Couldn't find state file %r.  Run the \"link\" subcommand first.\n"
+            % (STATE_FILE))
         sys.exit(1)
     f = open(STATE_FILE, 'r')
     state = json.load(f)
@@ -265,11 +295,13 @@ def load_state():
     f.close()
     return state
 
+
 def save_state(state):
     f = open(STATE_FILE, 'w')
     state['tree'] = Node.to_json_content(state['tree'])
     json.dump(state, f, indent=4)
     f.close()
+
 
 if __name__ == '__main__':
     main()

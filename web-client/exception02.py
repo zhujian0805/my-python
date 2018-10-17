@@ -1,7 +1,7 @@
 #!/usr/bin/python
 #coding=utf-8
 import urllib2
-url = "http://xxx"  #需要访问的URL
+url = "http://xxx"    #需要访问的URL
 try:
     response = urllib2.urlopen(url)
 except urllib2.URLError, e:
@@ -13,4 +13,4 @@ except urllib2.URLError, e:
         print "Error code:", e.code
         print "Return content:", e.read()
 else:
-    pass  #其他异常的处理
+    pass    #其他异常的处理

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 """
 Show how to make date plots in matplotlib using date tick locators and
 formatters.  See major_minor_demo1.py for more information on
@@ -12,7 +11,6 @@ from matplotlib.dates import MONDAY
 from matplotlib.finance import quotes_historical_yahoo_ochl
 from matplotlib.dates import MonthLocator, WeekdayLocator, DateFormatter
 
-
 date1 = datetime.date(2002, 1, 5)
 date2 = datetime.date(2003, 12, 1)
 
@@ -23,10 +21,9 @@ mondays = WeekdayLocator(MONDAY)
 months = MonthLocator(range(1, 13), bymonthday=1, interval=3)
 monthsFmt = DateFormatter("%b '%y")
 
-
 quotes = quotes_historical_yahoo_ochl('INTC', date1, date2)
 if len(quotes) == 0:
-    print ('Found no quotes')
+    print('Found no quotes')
     raise SystemExit
 
 dates = [q[0] for q in quotes]

@@ -22,10 +22,10 @@ try:
     s.set_debuglevel(1)
     s.connect(mail_host)
     s.starttls()
-    s.login(mail_user,mail_pwd)
+    s.login(mail_user, mail_pwd)
 
-    s.sendmail(mail_user,[mail_to,mail_cc,mail_bcc],msg.as_string())
+    s.sendmail(mail_user, [mail_to, mail_cc, mail_bcc], msg.as_string())
     s.close()
     print 'success'
-except Exception ,e:
+except Exception, e:
     print e

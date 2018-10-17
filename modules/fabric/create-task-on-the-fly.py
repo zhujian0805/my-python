@@ -6,6 +6,7 @@ cmds = ['ls', 'hostname', 'uname -r']
 
 tasks = []
 
+
 def taskAll():
-  for cmd in cmds:
-    run(cmd)
+    for cmd in cmds:
+        run(cmd)

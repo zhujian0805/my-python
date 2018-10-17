@@ -25,6 +25,8 @@ def world(environ, start_response):
                         ('Content-Length', str(len(output)))]
     write = start_response(status, response_headers)
     return [output]
+
+
 #here run the application
 result = router.route(environ, start_response)
 for value in result:

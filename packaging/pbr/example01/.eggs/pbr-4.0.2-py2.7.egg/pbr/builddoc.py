@@ -56,7 +56,6 @@ from pbr import git
 from pbr import options
 from pbr import version
 
-
 _rst_template = """%(heading)s
 %(underline)s
 
@@ -70,8 +69,7 @@ _rst_template = """%(heading)s
 def _find_modules(arg, dirname, files):
     for filename in files:
         if filename.endswith('.py') and filename != '__init__.py':
-            arg["%s.%s" % (dirname.replace('/', '.'),
-                           filename[:-3])] = True
+            arg["%s.%s" % (dirname.replace('/', '.'), filename[:-3])] = True
 
 
 class LocalBuildDoc(setup_command.BuildDoc):
@@ -94,8 +92,7 @@ class LocalBuildDoc(setup_command.BuildDoc):
         return source_dir
 
     def generate_autoindex(self, excluded_modules=None):
-        log.info("[pbr] Autodocumenting from %s"
-                 % os.path.abspath(os.curdir))
+        log.info("[pbr] Autodocumenting from %s" % os.path.abspath(os.curdir))
         modules = {}
         source_dir = self._get_source_dir()
         for pkg in self.distribution.packages:
@@ -104,8 +101,8 @@ class LocalBuildDoc(setup_command.BuildDoc):
                     _find_modules(modules, dirpath, files)
 
         def include(module):
-            return not any(fnmatch.fnmatch(module, pat)
-                           for pat in excluded_modules)
+            return not any(
+                fnmatch.fnmatch(module, pat) for pat in excluded_modules)
 
         module_list = sorted(mod for mod in modules.keys() if include(mod))
         autoindex_filename = os.path.join(source_dir, 'autoindex.rst')
@@ -115,25 +112,23 @@ class LocalBuildDoc(setup_command.BuildDoc):
 
 """)
             for module in module_list:
-                output_filename = os.path.join(source_dir,
-                                               "%s.rst" % module)
+                output_filename = os.path.join(source_dir, "%s.rst" % module)
                 heading = "The :mod:`%s` Module" % module
                 underline = "=" * len(heading)
-                values = dict(module=module, heading=heading,
-                              underline=underline)
+                values = dict(
+                    module=module, heading=heading, underline=underline)
 
-                log.info("[pbr] Generating %s"
-                         % output_filename)
+                log.info("[pbr] Generating %s" % output_filename)
                 with open(output_filename, 'w') as output_file:
                     output_file.write(_rst_template % values)
                 autoindex.write("   %s.rst\n" % module)
 
     def _sphinx_tree(self):
-            source_dir = self._get_source_dir()
-            cmd = ['-H', 'Modules', '-o', source_dir, '.']
-            if apidoc_use_padding:
-                cmd.insert(0, 'apidoc')
-            apidoc.main(cmd + self.autodoc_tree_excludes)
+        source_dir = self._get_source_dir()
+        cmd = ['-H', 'Modules', '-o', source_dir, '.']
+        if apidoc_use_padding:
+            cmd.insert(0, 'apidoc')
+        apidoc.main(cmd + self.autodoc_tree_excludes)
 
     def _sphinx_run(self):
         if not self.verbose:
@@ -151,15 +146,22 @@ class LocalBuildDoc(setup_command.BuildDoc):
             confoverrides['today'] = self.today
         if self.sphinx_initialized:
             confoverrides['suppress_warnings'] = [
-                'app.add_directive', 'app.add_role',
-                'app.add_generic_role', 'app.add_node',
+                'app.add_directive',
+                'app.add_role',
+                'app.add_generic_role',
+                'app.add_node',
                 'image.nonlocal_uri',
             ]
         app = application.Sphinx(
-            self.source_dir, self.config_dir,
-            self.builder_target_dir, self.doctree_dir,
-            self.builder, confoverrides, status_stream,
-            freshenv=self.fresh_env, warningiserror=self.warning_is_error)
+            self.source_dir,
+            self.config_dir,
+            self.builder_target_dir,
+            self.doctree_dir,
+            self.builder,
+            confoverrides,
+            status_stream,
+            freshenv=self.fresh_env,
+            warningiserror=self.warning_is_error)
         self.sphinx_initialized = True
 
         try:
@@ -187,9 +189,8 @@ class LocalBuildDoc(setup_command.BuildDoc):
         tree_index = options.get_boolean_option(option_dict,
                                                 'autodoc_tree_index_modules',
                                                 'AUTODOC_TREE_INDEX_MODULES')
-        auto_index = options.get_boolean_option(option_dict,
-                                                'autodoc_index_modules',
-                                                'AUTODOC_INDEX_MODULES')
+        auto_index = options.get_boolean_option(
+            option_dict, 'autodoc_index_modules', 'AUTODOC_INDEX_MODULES')
         if not os.getenv('SPHINX_DEBUG'):
             # NOTE(afazekas): These options can be used together,
             # but they do a very similar thing in a different way
@@ -197,9 +198,9 @@ class LocalBuildDoc(setup_command.BuildDoc):
                 self._sphinx_tree()
             if auto_index:
                 self.generate_autoindex(
-                    set(option_dict.get(
-                        "autodoc_exclude_modules",
-                        [None, ""])[1].split()))
+                    set(
+                        option_dict.get("autodoc_exclude_modules",
+                                        [None, ""])[1].split()))
 
         self.finalize_options()
 

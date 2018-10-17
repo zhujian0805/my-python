@@ -24,20 +24,18 @@ from pbr.tests import base
 
 
 class FilesConfigTest(base.BaseTestCase):
-
     def setUp(self):
         super(FilesConfigTest, self).setUp()
 
-        pkg_fixture = fixtures.PythonPackage(
-            "fake_package", [
-                ("fake_module.py", b""),
-                ("other_fake_module.py", b""),
-            ])
+        pkg_fixture = fixtures.PythonPackage("fake_package", [
+            ("fake_module.py", b""),
+            ("other_fake_module.py", b""),
+        ])
         self.useFixture(pkg_fixture)
         pkg_etc = os.path.join(pkg_fixture.base, 'etc')
         pkg_sub = os.path.join(pkg_etc, 'sub')
-        subpackage = os.path.join(
-            pkg_fixture.base, 'fake_package', 'subpackage')
+        subpackage = os.path.join(pkg_fixture.base, 'fake_package',
+                                  'subpackage')
         os.makedirs(pkg_sub)
         os.makedirs(subpackage)
         with open(os.path.join(pkg_etc, "foo"), 'w') as foo_file:
@@ -50,29 +48,17 @@ class FilesConfigTest(base.BaseTestCase):
         self.useFixture(base.DiveDir(pkg_fixture.base))
 
     def test_implicit_auto_package(self):
-        config = dict(
-            files=dict(
-            )
-        )
+        config = dict(files=dict())
         files.FilesConfig(config, 'fake_package').run()
         self.assertIn('subpackage', config['files']['packages'])
 
     def test_auto_package(self):
-        config = dict(
-            files=dict(
-                packages='fake_package',
-            )
-        )
+        config = dict(files=dict(packages='fake_package', ))
         files.FilesConfig(config, 'fake_package').run()
         self.assertIn('subpackage', config['files']['packages'])
 
     def test_data_files_globbing(self):
-        config = dict(
-            files=dict(
-                data_files="\n  etc/pbr = etc/*"
-            )
-        )
+        config = dict(files=dict(data_files="\n  etc/pbr = etc/*"))
         files.FilesConfig(config, 'fake_package').run()
-        self.assertIn(
-            '\netc/pbr/ = \n etc/foo\netc/pbr/sub = \n etc/sub/bar',
-            config['files']['data_files'])
+        self.assertIn('\netc/pbr/ = \n etc/foo\netc/pbr/sub = \n etc/sub/bar',
+                      config['files']['data_files'])

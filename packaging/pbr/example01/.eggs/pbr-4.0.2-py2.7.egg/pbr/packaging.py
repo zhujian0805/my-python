@@ -13,7 +13,6 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
 """
 Utilities with minimum-depends for use in setup.py
 """
@@ -46,8 +45,10 @@ from pbr import testr_command
 from pbr import version
 
 REQUIREMENTS_FILES = ('requirements.txt', 'tools/pip-requires')
-PY_REQUIREMENTS_FILES = [x % sys.version_info[0] for x in (
-    'requirements-py%d.txt', 'tools/pip-requires-py%d')]
+PY_REQUIREMENTS_FILES = [
+    x % sys.version_info[0]
+    for x in ('requirements-py%d.txt', 'tools/pip-requires-py%d')
+]
 TEST_REQUIREMENTS_FILES = ('test-requirements.txt', 'tools/test-requires')
 
 
@@ -83,11 +84,11 @@ def get_reqs_from_files(requirements_files):
 
     deprecated = [f for f in existing if f in PY_REQUIREMENTS_FILES]
     if deprecated:
-        warnings.warn('Support for \'-pyN\'-suffixed requirements files is '
-                      'deprecated in pbr 4.0 and will be removed in 5.0. '
-                      'Use environment markers instead. Conflicting files: '
-                      '%r' % deprecated,
-                      DeprecationWarning)
+        warnings.warn(
+            'Support for \'-pyN\'-suffixed requirements files is '
+            'deprecated in pbr 4.0 and will be removed in 5.0. '
+            'Use environment markers instead. Conflicting files: '
+            '%r' % deprecated, DeprecationWarning)
 
     for requirements_file in existing:
         with open(requirements_file, 'r') as fil:
@@ -105,9 +106,7 @@ def parse_requirements(requirements_files=None, strip_markers=False):
         # take a versioned egg fragment and return a
         # versioned package requirement e.g.
         # nova-1.2.3 becomes nova>=1.2.3
-        return re.sub(r'([\w.]+)-([\w.-]+)',
-                      r'\1>=\2',
-                      match.groups()[-1])
+        return re.sub(r'([\w.]+)-([\w.-]+)', r'\1>=\2', match.groups()[-1])
 
     requirements = []
     for line in get_reqs_from_files(requirements_files):
@@ -123,8 +122,8 @@ def parse_requirements(requirements_files=None, strip_markers=False):
         # -r other-requirements.txt
         if line.startswith('-r'):
             req_file = line.partition(' ')[2]
-            requirements += parse_requirements(
-                [req_file], strip_markers=strip_markers)
+            requirements += parse_requirements([req_file],
+                                               strip_markers=strip_markers)
             continue
 
         try:
@@ -159,8 +158,7 @@ def parse_requirements(requirements_files=None, strip_markers=False):
                 line = line[:semi_pos]
             requirements.append(line)
         else:
-            log.info(
-                '[pbr] Excluding %s: %s' % (project_name, reason))
+            log.info('[pbr] Excluding %s: %s' % (project_name, reason))
 
     return requirements
 
@@ -275,10 +273,10 @@ try:
         description = 'DEPRECATED: Run unit tests using nose'
 
         def run(self):
-            warnings.warn('nose integration in pbr is deprecated. Please use '
-                          'the native nose setuptools configuration or call '
-                          'nose directly',
-                          DeprecationWarning)
+            warnings.warn(
+                'nose integration in pbr is deprecated. Please use '
+                'the native nose setuptools configuration or call '
+                'nose directly', DeprecationWarning)
 
             # Can't use super - base class old-style class
             commands.nosetests.run(self)
@@ -291,6 +289,7 @@ except ImportError:
 
 def have_nose():
     return _have_nose
+
 
 _wsgi_text = """#PBR Generated from %(group)r
 
@@ -359,7 +358,6 @@ if __name__ == "__main__":
     sys.exit(%(invoke_target)s())
 """
 
-
 # the following allows us to specify different templates per entry
 # point group when generating pbr scripts.
 ENTRY_POINTS_MAP = {
@@ -395,8 +393,9 @@ def generate_script(group, entry_point, header, template):
     return header + script_text
 
 
-def override_get_script_args(
-        dist, executable=os.path.normpath(sys.executable), is_wininst=False):
+def override_get_script_args(dist,
+                             executable=os.path.normpath(sys.executable),
+                             is_wininst=False):
     """Override entrypoints console_script."""
     header = easy_install.get_script_header("", executable, is_wininst)
     for group, template in ENTRY_POINTS_MAP.items():
@@ -422,8 +421,8 @@ class LocalInstallScripts(install_scripts.install_scripts):
         header = easy_install.get_script_header("", executable, is_wininst)
         wsgi_script_template = ENTRY_POINTS_MAP['wsgi_scripts']
         for name, ep in dist.get_entry_map('wsgi_scripts').items():
-            content = generate_script(
-                'wsgi_scripts', ep, header, wsgi_script_template)
+            content = generate_script('wsgi_scripts', ep, header,
+                                      wsgi_script_template)
             self.write_script(name, content)
 
     def run(self):
@@ -440,14 +439,13 @@ class LocalInstallScripts(install_scripts.install_scripts):
         dist = pkg_resources.Distribution(
             ei_cmd.egg_base,
             pkg_resources.PathMetadata(ei_cmd.egg_base, ei_cmd.egg_info),
-            ei_cmd.egg_name, ei_cmd.egg_version,
+            ei_cmd.egg_name,
+            ei_cmd.egg_version,
         )
         bs_cmd = self.get_finalized_command('build_scripts')
-        executable = getattr(
-            bs_cmd, 'executable', easy_install.sys_executable)
+        executable = getattr(bs_cmd, 'executable', easy_install.sys_executable)
         is_wininst = getattr(
-            self.get_finalized_command("bdist_wininst"), '_is_running', False
-        )
+            self.get_finalized_command("bdist_wininst"), '_is_running', False)
 
         if 'bdist_wheel' in self.distribution.have_run:
             # We're building a wheel which has no way of generating mod_wsgi
@@ -471,11 +469,8 @@ class LocalManifestMaker(egg_info.manifest_maker):
 
     def _add_pbr_defaults(self):
         for template_line in [
-            'include AUTHORS',
-            'include ChangeLog',
-            'exclude .gitignore',
-            'exclude .gitreview',
-            'global-exclude *.pyc'
+                'include AUTHORS', 'include ChangeLog', 'exclude .gitignore',
+                'exclude .gitreview', 'global-exclude *.pyc'
         ]:
             self.filelist.process_template_line(template_line)
 
@@ -514,9 +509,8 @@ class LocalEggInfo(egg_info.egg_info):
         to recreate SOURCES.txt
         """
         manifest_filename = os.path.join(self.egg_info, "SOURCES.txt")
-        if (not os.path.exists(manifest_filename) or
-                os.path.exists('.git') or
-                'sdist' in sys.argv):
+        if (not os.path.exists(manifest_filename) or os.path.exists('.git')
+                or 'sdist' in sys.argv):
             log.info("[pbr] Processing SOURCES.txt")
             mm = LocalManifestMaker(self.distribution)
             mm.manifest = manifest_filename
@@ -555,7 +549,7 @@ class LocalSDist(sdist.sdist):
         try:
             # versions of reno witout this module will not have the required
             # feature, hence the import
-            from reno import setup_command  # noqa
+            from reno import setup_command    # noqa
         except ImportError:
             log.info('[pbr] reno was not found or is too old. Skipping '
                      'release notes')
@@ -594,6 +588,7 @@ class LocalSDist(sdist.sdist):
             self.filelist.sort()
         sdist.sdist.make_distribution(self)
 
+
 try:
     from pbr import builddoc
     _have_sphinx = True
@@ -628,8 +623,10 @@ def _get_increment_kwargs(git_dir, tag):
     changelog = git._run_git_command(['log', '--pretty=%B', version_spec],
                                      git_dir)
     header_len = len('sem-ver:')
-    commands = [line[header_len:].strip() for line in changelog.split('\n')
-                if line.lower().startswith('sem-ver:')]
+    commands = [
+        line[header_len:].strip() for line in changelog.split('\n')
+        if line.lower().startswith('sem-ver:')
+    ]
     symbols = set()
     for command in commands:
         symbols.update([symbol.strip() for symbol in command.split(',')])
@@ -638,6 +635,7 @@ def _get_increment_kwargs(git_dir, tag):
         if symbol in symbols:
             result[impact] = True
             symbols.discard(symbol)
+
     _handle_symbol('bugfix', symbols, 'patch')
     _handle_symbol('feature', symbols, 'minor')
     _handle_symbol('deprecation', symbols, 'minor')
@@ -699,8 +697,8 @@ def _get_version_from_git_target(git_dir, target_version):
     if target_version is not None and new_version > target_version:
         raise ValueError(
             "git history requires a target version of %(new)s, but target "
-            "version is %(target)s" %
-            dict(new=new_version, target=target_version))
+            "version is %(target)s" % dict(
+                new=new_version, target=target_version))
     if distance == 0:
         return last_semver
     new_dev = new_version.to_dev(distance)
@@ -726,9 +724,10 @@ def _get_version_from_git(pre_version=None):
     git_dir = git._run_git_functions()
     if git_dir:
         try:
-            tagged = git._run_git_command(
-                ['describe', '--exact-match'], git_dir,
-                throw_on_error=True).replace('-', '.')
+            tagged = git._run_git_command(['describe', '--exact-match'],
+                                          git_dir,
+                                          throw_on_error=True).replace(
+                                              '-', '.')
             target_version = version.SemanticVersion.from_pip_string(tagged)
         except Exception:
             if pre_version:
@@ -790,9 +789,8 @@ def get_version(package_name, pre_version=None):
     :param pre_version: The version field from setup.cfg - if set then this
         version will be the next release.
     """
-    version = os.environ.get(
-        "PBR_VERSION",
-        os.environ.get("OSLO_PACKAGE_VERSION", None))
+    version = os.environ.get("PBR_VERSION",
+                             os.environ.get("OSLO_PACKAGE_VERSION", None))
     if version:
         return version
     version = _get_version_from_pkg_metadata(package_name)
@@ -807,13 +805,13 @@ def get_version(package_name, pre_version=None):
         version = version.encode('utf-8')
     if version:
         return version
-    raise Exception("Versioning for this project requires either an sdist"
-                    " tarball, or access to an upstream git repository."
-                    " It's also possible that there is a mismatch between"
-                    " the package name in setup.cfg and the argument given"
-                    " to pbr.version.VersionInfo. Project name {name} was"
-                    " given, but was not able to be found.".format(
-                        name=package_name))
+    raise Exception(
+        "Versioning for this project requires either an sdist"
+        " tarball, or access to an upstream git repository."
+        " It's also possible that there is a mismatch between"
+        " the package name in setup.cfg and the argument given"
+        " to pbr.version.VersionInfo. Project name {name} was"
+        " given, but was not able to be found.".format(name=package_name))
 
 
 # This is added because pbr uses pbr to install itself. That means that

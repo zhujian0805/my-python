@@ -79,21 +79,23 @@ class DropBoxClass:
 
         if i1 < 0:
             log.error(
-                "Site structure has changed, cannot find first occurence of '('")
+                "Site structure has changed, cannot find first occurence of '('"
+            )
             return None
 
-        i1 += 1  #value starts after paranthesis
+        i1 += 1    #value starts after paranthesis
         i2 = s.find("MB")
 
-        if i2 > 0:  #meaning it's defined in MB
+        if i2 > 0:    #meaning it's defined in MB
             return float(s[i1:i2])
-        else:  #try with GB otherwise
+        else:    #try with GB otherwise
             i2 = s.find("GB")
             if i2 > 0:
                 return float(s[i1:i2])
             else:
                 log.error(
-                    "Site structure changed, storage isn't indicated in either MB or GB")
+                    "Site structure changed, storage isn't indicated in either MB or GB"
+                )
                 return None
 
     def _parseStorageSize(self, s):
@@ -115,7 +117,8 @@ class DropBoxClass:
 
         if element == None:
             log.error(
-                "Site structure has changed, usage percentage span doesn't exist under account page")
+                "Site structure has changed, usage percentage span doesn't exist under account page"
+            )
             return None
 
         #parse out the string

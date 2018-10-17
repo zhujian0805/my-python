@@ -1,9 +1,7 @@
 #!/usr/bin/python
-
 """ This is a simplest fabric script"""
 from fabric.api import sudo, env, execute, hide, cd
 import paramiko, socket
-
 
 env.hosts = ['localhost', '128.0.0.1']
 env.user = "jzhu"
@@ -12,6 +10,7 @@ env.password = "VFR$bgt5nhy6"
 env.skip_bad_hosts = True
 env.parallel = True
 env.timeout = 1
+
 
 def isup(host, port):
     """check if host alive"""
@@ -23,9 +22,11 @@ def isup(host, port):
         transport = paramiko.Transport((host, port))
         up = True
     except:
-        print('***Warning*** Host {host} on port {port} is down.'.format( host=host, port=port))
+        print('***Warning*** Host {host} on port {port} is down.'.format(
+            host=host, port=port))
     socket.setdefaulttimeout(orig_timeout)
     return up
+
 
 def hello(directory):
     """This is for a demostration of fabric"""
@@ -41,6 +42,7 @@ def hello(directory):
             ret.append("Failed to execute command")
 
     return ret
+
 
 #execute(hello, "/dev")
 OUTPUT = execute(hello, "/tmp")

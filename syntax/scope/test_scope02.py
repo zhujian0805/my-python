@@ -21,9 +21,11 @@
 
 ttt = 'ttt'
 
+
 def setit(it):
     ttt = it
     print(ttt)
+
 
 def showit():
     print(ttt)

@@ -18,11 +18,12 @@ class Date(object):
         t = time.localtime(time.time() + 86400)
         return Date(t.tm_year, t.tm_mon, t.tm_mday)
 
+
 #Example of creating some dates
 a = Date(1967, 4, 9)
 b = Date.now()
 # Calls static method now()
-c = Date.tomorrow()  # Calls static method tomorrow()
+c = Date.tomorrow()    # Calls static method tomorrow()
 
 print a
 print b

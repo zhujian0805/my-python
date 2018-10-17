@@ -8,8 +8,10 @@ import pexpect
 import re
 import threading
 
+
 class Enclosure:
     """This is a class for manipulate enclosure"""
+
     def __init__(self, mmname):
         self.mm0 = mmname + '-mm0' + '.sample.net'
         self.mm1 = mmname + '-mm1' + '.sample.net'
@@ -19,10 +21,20 @@ class Enclosure:
         self.client = paramiko.client.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
-            self.client.connect(self.mm0, port=22, username='username', password='passwd', timeout=10)
+            self.client.connect(
+                self.mm0,
+                port=22,
+                username='username',
+                password='passwd',
+                timeout=10)
         except:
             try:
-                self.client.connect(self.mm1, port=22, username='username', password='passwd', timeout=10)
+                self.client.connect(
+                    self.mm1,
+                    port=22,
+                    username='username',
+                    password='passwd',
+                    timeout=10)
             except:
                 print "something wrong while connecting to %s!" % self.mm0
                 return
@@ -37,7 +49,7 @@ class Enclosure:
             if re.search(r'Manufacturer  : HP', line):
                 hp = 1
                 break
-        
+
         if hp:
             self.manufacturer = 'HP'
         else:
@@ -48,7 +60,8 @@ class Enclosure:
         try:
             return self.client.exec_command(cmd, timeout=20)
         except:
-            print "something wrong while executing command %s on %s" % (cmd, self.mm)
+            print "something wrong while executing command %s on %s" % (
+                cmd, self.mm)
             return
 
     def showSyslog(self, entity):
@@ -65,6 +78,7 @@ class Enclosure:
         stdin, stdout, stderr = self.execCmd('show server info %s' % blade)
         for line in stdout.readlines():
             print line.strip()
+
 
 if __name__ == "__main__":
     amm = Enclosure(sys.argv[1])

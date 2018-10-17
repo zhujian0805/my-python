@@ -11,7 +11,7 @@ from dropbox.client import (
     DropboxClient,
     DropboxOAuth2FlowNoRedirect,
     ErrorResponse,
-    )
+)
 from dropbox.datastore import DatastoreManager, Date, DatastoreError
 
 
@@ -39,9 +39,9 @@ def main():
     elif len(args) == 2:
         client = login(*args)
     else:
-        print >>sys.stderr, 'Usage: shtasks.py ACCESS_TOKEN'
-        print >>sys.stderr, 'or:    shtasks.py APP_KEY APP_SECRET'
-        print >>sys.stderr, 'To get an app key and secret: https://www.dropbox.com/developers/apps'
+        print >> sys.stderr, 'Usage: shtasks.py ACCESS_TOKEN'
+        print >> sys.stderr, 'or:    shtasks.py APP_KEY APP_SECRET'
+        print >> sys.stderr, 'To get an app key and secret: https://www.dropbox.com/developers/apps'
         sys.exit(2)
     mgr = DatastoreManager(client)
     ds = mgr.open_default_datastore()

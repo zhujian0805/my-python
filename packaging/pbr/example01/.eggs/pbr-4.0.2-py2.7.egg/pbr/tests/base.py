@@ -36,7 +36,6 @@
 # DISCLAIMED. IN NO EVENT SHALL AURA BE LIABLE FOR ANY DIRECT, INDIRECT,
 # INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
 # BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
-
 """Common utilities used in testing"""
 
 import os
@@ -68,7 +67,6 @@ class DiveDir(fixtures.Fixture):
 
 
 class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
-
     def setUp(self):
         super(BaseTestCase, self).setUp()
         test_timeout = os.environ.get('OS_TEST_TIMEOUT', 30)
@@ -88,8 +86,7 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         if os.environ.get('OS_STDERR_CAPTURE') in options.TRUE_VALUES:
             stderr = self.useFixture(fixtures.StringStream('stderr')).stream
             self.useFixture(fixtures.MonkeyPatch('sys.stderr', stderr))
-        self.log_fixture = self.useFixture(
-            fixtures.FakeLogger('pbr'))
+        self.log_fixture = self.useFixture(fixtures.FakeLogger('pbr'))
 
         # Older git does not have config --local, so create a temporary home
         # directory to permit using git config --global without stepping on
@@ -104,8 +101,9 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
 
         self.temp_dir = self.useFixture(fixtures.TempDir()).path
         self.package_dir = os.path.join(self.temp_dir, 'testpackage')
-        shutil.copytree(os.path.join(os.path.dirname(__file__), 'testpackage'),
-                        self.package_dir)
+        shutil.copytree(
+            os.path.join(os.path.dirname(__file__), 'testpackage'),
+            self.package_dir)
         self.addCleanup(os.chdir, os.getcwd())
         os.chdir(self.package_dir)
         self.addCleanup(self._discard_testpackage)
@@ -124,15 +122,14 @@ class BaseTestCase(testtools.TestCase, testresources.ResourcedTestCase):
         # Remove pbr.testpackage from sys.modules so that it can be freshly
         # re-imported by the next test
         for k in list(sys.modules):
-            if (k == 'pbr_testpackage' or
-                    k.startswith('pbr_testpackage.')):
+            if (k == 'pbr_testpackage' or k.startswith('pbr_testpackage.')):
                 del sys.modules[k]
 
     def run_pbr(self, *args, **kwargs):
         return self._run_cmd('pbr', args, **kwargs)
 
     def run_setup(self, *args, **kwargs):
-        return self._run_cmd(sys.executable, ('setup.py',) + args, **kwargs)
+        return self._run_cmd(sys.executable, ('setup.py', ) + args, **kwargs)
 
     def _run_cmd(self, cmd, args=[], allow_fail=True, cwd=None):
         """Run a command in the root of the test working copy.
@@ -201,21 +198,23 @@ def _run_cmd(args, cwd):
     :return: ((stdout, stderr), returncode)
     """
     p = subprocess.Popen(
-        args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE, cwd=cwd)
+        args,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=cwd)
     streams = tuple(s.decode('latin1').strip() for s in p.communicate())
     for stream_content in streams:
         print(stream_content)
-    return (streams) + (p.returncode,)
+    return (streams) + (p.returncode, )
 
 
 def _config_git():
     _run_cmd(
         ['git', 'config', '--global', 'user.email', 'example@example.com'],
         None)
-    _run_cmd(
-        ['git', 'config', '--global', 'user.name', 'OpenStack Developer'],
-        None)
-    _run_cmd(
-        ['git', 'config', '--global', 'user.signingkey',
-         'example@example.com'], None)
+    _run_cmd(['git', 'config', '--global', 'user.name', 'OpenStack Developer'],
+             None)
+    _run_cmd([
+        'git', 'config', '--global', 'user.signingkey', 'example@example.com'
+    ], None)
