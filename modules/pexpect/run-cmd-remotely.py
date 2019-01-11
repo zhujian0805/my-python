@@ -14,6 +14,7 @@ try:
     s.login(hostname, username, password)
     s.sendline(command)
     s.prompt()
+    print("----------- Running - %s - on %s -----------" % (command, hostname))
     print(s.before)
     s.logout()
 except pxssh.ExceptionPxssh as e:
