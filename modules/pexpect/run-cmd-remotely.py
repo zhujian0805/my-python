@@ -18,7 +18,9 @@ s.sendline('sudo su -')
 s.expect(".*password.*for.*")
 s.sendline(password)
 s.expect(".*#")
+print("******** Running command: %s on: %s ********" % (command, hostname))
+print("------------------------------------------------------------------------")
 s.sendline(command)
 s.logfile = sys.stdout
 s.expect(".*#")
-print
+print("\n")
