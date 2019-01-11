@@ -6,8 +6,13 @@ import sys
 import os
 
 hostname = sys.argv[1]
-username = os.environ["USERNAME"]
-password = os.environ["MYPASSWORD"]
+
+if os.environ.has_key("USERNAME"):
+    username = os.environ["USERNAME"]
+else:
+    username = os.environ["USER"]
+
+password = os.environ["LDAPUSERPW"]
 command = " ".join(sys.argv[2:])
 
 s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (username, hostname))
