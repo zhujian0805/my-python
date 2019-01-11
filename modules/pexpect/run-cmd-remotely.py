@@ -16,6 +16,7 @@ password = os.environ["LDAPUSERPW"]
 command = " ".join(sys.argv[2:])
 
 s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (username, hostname))
+s.setwinsize(65535,65535)
 s.expect(".*password.*")
 s.sendline(password)
 s.expect(".*")
