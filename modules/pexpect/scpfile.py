@@ -4,7 +4,7 @@ import sys
 import pexpect
 import time
 
-mypassword = 'VFR$bgt5nhy6'
+mypassword = 'xxxx'
 
 child = pexpect.spawn('scp /etc/passwd jameszhu@localhost:/tmp')
 #child.logfile = sys.stdout
