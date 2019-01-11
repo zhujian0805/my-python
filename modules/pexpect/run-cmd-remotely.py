@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from pexpect import pxssh
+import pexpect
 import getpass
 import sys
 import os
@@ -9,14 +10,15 @@ username = os.environ["USERNAME"]
 password = os.environ["MYPASSWORD"]
 command = " ".join(sys.argv[2:])
 
-try:
-    s = pxssh.pxssh(options={ "StrictHostKeyChecking": "no", "UserKnownHostsFile": "/dev/null"})
-    s.login(hostname, username, password)
-    s.sendline(command)
-    s.prompt()
-    print("----------- Running: %s - on %s -----------" % (command, hostname))
-    print(s.before)
-    s.logout()
-except pxssh.ExceptionPxssh as e:
-    print("pxssh failed on login.")
-    print(e)
+s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (username, hostname))
+s.expect(".*password.*")
+s.sendline(password)
+s.expect(".*")
+s.sendline('sudo su -')
+s.expect(".*password.*for.*")
+s.sendline(password)
+s.expect(".*#")
+s.sendline(command)
+s.logfile = sys.stdout
+s.expect(".*#")
+print
