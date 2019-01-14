@@ -1,32 +1,63 @@
 #!/usr/bin/env python
-from pexpect import pxssh
-import pexpect
-import getpass
+""" This is for running COMMAND remotely"""
 import sys
 import os
+import argparse
+import pexpect
 
-hostname = sys.argv[1]
 
-if os.environ.has_key("USERNAME"):
-    username = os.environ["USERNAME"]
-else:
-    username = os.environ["USER"]
+class ExpectMe():
+    """ expect me"""
 
-password = os.environ["LDAPUSERPW"]
-command = " ".join(sys.argv[2:])
+    def __init__(self, username, password, hostname):
+        """ initialization """
+        self.hostname = hostname
+        self.username = username
+        self.password = password
+        self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname))
+        self.s.setwinsize(65535, 65535)
+        self.login()
 
-s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (username, hostname))
-s.setwinsize(65535,65535)
-s.expect(".*password.*")
-s.sendline(password)
-s.expect(".*")
-s.sendline('sudo su -')
-s.expect(".*password.*for.*")
-s.sendline(password)
-s.expect(".*#")
-print("******** Running command: %s on: %s ********" % (command, hostname))
-print("------------------------------------------------------------------------")
-s.sendline(command)
-s.logfile = sys.stdout
-s.expect(".*#")
-print("\n")
+    def login(self):
+        """ login """
+        self.s.expect(".*password.*")
+        self.s.sendline(self.password)
+        self.s.expect(".*")
+        self.s.sendline('sudo su -')
+        self.s.expect(".*password.*for.*")
+        self.s.sendline(self.password)
+        self.s.expect(".*#")
+
+    def RunCmd(self, command):
+        """ run command """
+        print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
+        print("---------------------------------------------------------------")
+        self.s.sendline(command)
+        self.s.logfile = sys.stdout
+        self.s.expect(".*#")
+        print("\n")
+
+
+def parse_opts():
+    parser = argparse.ArgumentParser(description='Run commands remotely', formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=35, width=130))
+    required_group = parser.add_argument_group('Required parameters')
+    required_group.add_argument('-h', '--hosts', dest='hosts', default="",
+                                required=True, help='specify host to be managed')
+
+
+if __name__ == '__main__':
+
+    HOST = sys.argv[1]
+    if os.environ.has_key("USERNAME"):
+        USER = os.environ["USERNAME"]
+    else:
+        USER = os.environ["USER"]
+
+    PASSWD = os.environ["LDAPUSERPW"]
+    COMMAND = " ".join(sys.argv[2:])
+
+    for host in HOST.split(','):
+        EXP = ExpectMe(USER, PASSWD, host)
+        EXP.RunCmd(COMMAND)
+
+
