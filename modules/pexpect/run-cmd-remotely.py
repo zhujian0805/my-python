@@ -28,7 +28,7 @@ class ExpectMe():
         self.s.sendline(self.password)
         self.s.expect(".*#")
 
-    def RunCmd(self, command):
+    def RunCmd(self, command="uptime"):
         """ run command """
         print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
         print("---------------------------------------------------------------")
@@ -55,6 +55,8 @@ if __name__ == '__main__':
 
     PASSWD = os.environ["LDAPUSERPW"]
     COMMAND = " ".join(sys.argv[2:])
+    if not COMMAND:
+        COMMAND = 'uptime'
 
     for host in HOST.split(','):
         EXP = ExpectMe(USER, PASSWD, host)
