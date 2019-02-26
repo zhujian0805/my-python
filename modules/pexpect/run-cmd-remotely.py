@@ -56,7 +56,7 @@ if __name__ == '__main__':
     PASSWD = os.environ["LDAPUSERPW"]
     COMMAND = " ".join(sys.argv[2:])
     if not COMMAND:
-        COMMAND = 'uptime'
+        COMMAND = 'echo;uptime;echo;route -n;echo;df;echo'
 
     for host in HOST.split(','):
         EXP = ExpectMe(USER, PASSWD, host)
