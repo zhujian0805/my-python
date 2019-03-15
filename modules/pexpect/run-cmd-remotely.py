@@ -21,7 +21,7 @@ class ExpectMe():
             self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname), timeout=3)
             self.s.setwinsize(65535, 65535)
             self.login()
-        except pexpect.exceptions.TIMEOUT or pexpect.exceptions.EOF:
+        except Exception, e:
             self.ignore = True
 
     def login(self):
@@ -40,7 +40,6 @@ class ExpectMe():
             print "******************************************************************************************"
             print "This server(%s) is not reachable, ignore for now and please check!" % self.hostname
             print "******************************************************************************************"
-            return
         else:
             print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
             print("-------------------------------------------------------------------------------------------------------------------------------------------")
