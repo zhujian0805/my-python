@@ -2,8 +2,10 @@
 """ This is for running COMMAND remotely"""
 import sys
 import os
+import time
 import argparse
 import pexpect
+from multiprocessing import Process, Queue
 
 
 class ExpectMe():
@@ -14,9 +16,13 @@ class ExpectMe():
         self.hostname = hostname
         self.username = username
         self.password = password
-        self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname))
-        self.s.setwinsize(65535, 65535)
-        self.login()
+        self.ignore = False
+        try:
+            self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname), timeout=3)
+            self.s.setwinsize(65535, 65535)
+            self.login()
+        except pexpect.exceptions.TIMEOUT or pexpect.exceptions.EOF:
+            self.ignore = True
 
     def login(self):
         """ login """
@@ -30,8 +36,13 @@ class ExpectMe():
 
     def RunCmd(self, command="uptime"):
         """ run command """
+        if self.ignore:
+            print "******************************************************************************************"
+            print "This server(%s) is not reachable, ignore for now and please check!" % self.hostname
+            print "******************************************************************************************"
+            return
         print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
-        print("---------------------------------------------------------------")
+        print("-------------------------------------------------------------------------------------------------------------------------------------------")
         self.s.sendline(command)
         self.s.logfile = sys.stdout
         self.s.expect(".*#")
@@ -45,7 +56,15 @@ def parse_opts():
                                 required=True, help='specify host to be managed')
 
 
+def worker(tasks, USER, PASSWD):
+    for host in iter(tasks.get, 'STOP'):
+        EXP = ExpectMe(USER, PASSWD, host)
+        EXP.RunCmd(COMMAND)
+
 if __name__ == '__main__':
+
+    processes = []
+    NUMBER_OF_PROCESSES = 1
 
     HOST = sys.argv[1]
     if os.environ.has_key("USERNAME"):
@@ -56,10 +75,20 @@ if __name__ == '__main__':
     PASSWD = os.environ["LDAPUSERPW"]
     COMMAND = " ".join(sys.argv[2:])
     if not COMMAND:
-        COMMAND = 'echo;uptime;echo;route -n;echo;df;echo'
+        COMMAND = 'echo;cat /etc/redhat-release; echo; uptime;echo;route -n;echo;df;echo'
 
+    tasks = Queue()
     for host in HOST.split(','):
-        EXP = ExpectMe(USER, PASSWD, host)
-        EXP.RunCmd(COMMAND)
+        tasks.put(host)
+
+    for i in range(NUMBER_OF_PROCESSES):
+        p = Process(target=worker, args=(tasks, USER, PASSWD)).start()
+        processes.append(p)
+
+    while not tasks.empty():
+        time.sleep(1)
+
+    for i in range(NUMBER_OF_PROCESSES):
+        tasks.put('STOP')
 
 
