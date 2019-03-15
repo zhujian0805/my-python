@@ -41,12 +41,13 @@ class ExpectMe():
             print "This server(%s) is not reachable, ignore for now and please check!" % self.hostname
             print "******************************************************************************************"
             return
-        print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
-        print("-------------------------------------------------------------------------------------------------------------------------------------------")
-        self.s.sendline(command)
-        self.s.logfile = sys.stdout
-        self.s.expect(".*#")
-        print("\n")
+        else:
+            print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
+            print("-------------------------------------------------------------------------------------------------------------------------------------------")
+            self.s.sendline(command)
+            self.s.logfile = sys.stdout
+            self.s.expect(".*#")
+            print("\n")
 
 
 def parse_opts():
