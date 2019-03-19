@@ -18,7 +18,7 @@ class ExpectMe():
         self.password = password
         self.ignore = False
         try:
-            self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname), timeout=3)
+            self.s = pexpect.spawn("ssh -q -o StrictHostKeyChecking=no %s@%s" % (self.username, self.hostname), timeout=5)
             self.s.setwinsize(65535, 65535)
             self.login()
         except Exception, e:
@@ -30,7 +30,7 @@ class ExpectMe():
         self.s.sendline(self.password)
         self.s.expect(".*")
         self.s.sendline('sudo su -')
-        self.s.expect(".*password.*for.*")
+        self.s.expect('.*password.*for.*|(%|#|\\$) $')
         self.s.sendline(self.password)
         self.s.expect(".*#")
 
@@ -41,7 +41,7 @@ class ExpectMe():
             print "This server(%s) is not reachable, ignore for now and please check!" % self.hostname
             print "******************************************************************************************"
         else:
-            print("******** Running COMMAND: %s on: %s ********" % (command, self.hostname))
+            print("************************* Running COMMAND: %s on: %s ************************" % (command, self.hostname))
             print("-------------------------------------------------------------------------------------------------------------------------------------------")
             self.s.sendline(command)
             self.s.logfile = sys.stdout
@@ -75,7 +75,7 @@ if __name__ == '__main__':
     PASSWD = os.environ["LDAPUSERPW"]
     COMMAND = " ".join(sys.argv[2:])
     if not COMMAND:
-        COMMAND = 'echo;cat /etc/redhat-release; echo; uptime;echo;route -n;echo;df;echo'
+        COMMAND = 'pwd;echo;cat /etc/redhat-release; echo; uptime;echo;route -n;echo;df;echo'
 
     tasks = Queue()
     for host in HOST.split(','):
