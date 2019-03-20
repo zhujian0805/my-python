@@ -38,10 +38,10 @@ class ExpectMe():
         """ run command """
         if self.ignore:
             print "******************************************************************************************"
-            print "This server(%s) is not reachable, ignore for now and please check!" % self.hostname
+            print "This [server(%s)] is not reachable, ignore for now and please check!" % self.hostname
             print "******************************************************************************************"
         else:
-            print("************************* Running COMMAND: %s on: %s ************************" % (command, self.hostname))
+            print("************************* Running COMMAND: [%s] on host [%s] ************************" % (command, self.hostname))
             print("-------------------------------------------------------------------------------------------------------------------------------------------")
             self.s.sendline(command)
             self.s.logfile = sys.stdout
