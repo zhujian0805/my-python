@@ -76,6 +76,8 @@ if __name__ == '__main__':
     COMMAND = " ".join(sys.argv[2:])
     if not COMMAND:
         COMMAND = 'pwd;echo;cat /etc/redhat-release; echo; uptime;echo;route -n;echo;df;echo'
+    else:
+        COMMAND = 'pwd;echo;cat /etc/redhat-release; echo; uptime;echo;route -n;echo;df;echo' + ';' + COMMAND + ';echo;'
 
     tasks = Queue()
     for host in HOST.split(','):
